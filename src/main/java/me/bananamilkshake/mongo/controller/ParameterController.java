@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/parameter/{type}")
 @AllArgsConstructor
-public class Controller {
+public class ParameterController {
 
 	private final ParameterResponseAssembler parameterResponseAssembler;
 
