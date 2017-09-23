@@ -25,8 +25,8 @@ public class ParameterController {
 	}
 
 	@PostMapping(consumes = {MediaType.APPLICATION_JSON_VALUE})
-	public ResponseEntity createParameter(@PathVariable String type) {
-		return parameterResponseAssembler.createParameter(type);
+	public ResponseEntity createParameter(@PathVariable String type, @RequestBody(required = false) String validation) {
+		return parameterResponseAssembler.createParameter(type, validation);
 	}
 
 	@PutMapping(consumes = {MediaType.APPLICATION_JSON_VALUE})

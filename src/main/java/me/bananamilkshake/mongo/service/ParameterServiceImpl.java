@@ -6,15 +6,20 @@ import com.mongodb.util.JSON;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import me.bananamilkshake.mongo.exception.NoSuchParameterExistsException;
+import me.bananamilkshake.mongo.service.validation.ValidationSetupService;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Slf4j
 @Service
+@Transactional
 @AllArgsConstructor
 public class ParameterServiceImpl implements ParameterService {
 
 	private final MongoTemplate mongoTemplate;
+
+	private final ValidationSetupService validationSetupService;
 
 	@Override
 	public String getParameters(String type) {
@@ -34,8 +39,9 @@ public class ParameterServiceImpl implements ParameterService {
 	}
 
 	@Override
-	public void createParameter(String type) {
+	public void createParameter(String type, String validation) {
 		mongoTemplate.createCollection(type);
+		validationSetupService.setupValidation(mongoTemplate, type, validation);
 	}
 
 	@Override

@@ -4,7 +4,7 @@ public interface ParameterService {
 
 	String getParameters(String type);
 
-	void createParameter(String parameterMeta);
+	void createParameter(String parameterMeta, String validation);
 
 	void uploadParameters(String type, String parameters);
 }
