@@ -56,10 +56,10 @@ public class ParameterParameterControllerTest {
 		final String pathToParameter = "/parameter/" + newParameterName;
 
 		// when
-		when(parameterResponseAssembler.createParameter(eq(newParameterName))).thenReturn(ResponseEntity.created(uri(pathToParameter)).build());
+		when(parameterResponseAssembler.createParameter(eq(newParameterName), eq(null))).thenReturn(ResponseEntity.created(uri(pathToParameter)).build());
 
 		// then
-		final ResponseEntity result = parameterController.createParameter(newParameterName);
+		final ResponseEntity result = parameterController.createParameter(newParameterName, null);
 		assertThat(result.getStatusCode()).isEqualTo(HttpStatus.CREATED);
 		assertThat(result.getHeaders().getLocation().getPath()).isEqualTo(pathToParameter);
 	}
