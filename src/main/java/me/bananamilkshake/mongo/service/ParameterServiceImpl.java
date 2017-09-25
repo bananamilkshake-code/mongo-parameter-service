@@ -11,6 +11,8 @@ import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
+
 @Slf4j
 @Service
 @Transactional
@@ -19,17 +21,16 @@ public class ParameterServiceImpl implements ParameterService {
 
 	private final MongoTemplate mongoTemplate;
 
+	private final QueryCreator queryCreator;
+
 	private final ValidationSetupService validationSetupService;
 
 	@Override
-	public String getParameters(String type) {
-		if (!mongoTemplate.collectionExists(type)) {
-			throw new NoSuchParameterExistsException();
-		}
-
+	public String getParameters(String type, String user, LocalDate date) {
+		validateParameterType(type);
 		return mongoTemplate.execute(type, collection -> {
 			final BasicDBList dbList = new BasicDBList();
-			try (DBCursor cursor = collection.find()) {
+			try (DBCursor cursor = collection.find(queryCreator.createDBObject(user, date))) {
 				while (cursor.hasNext()) {
 					dbList.add(cursor.next());
 				}
@@ -46,7 +47,13 @@ public class ParameterServiceImpl implements ParameterService {
 
 	@Override
 	public void uploadParameters(String type, String parameters) {
-		final BasicDBList dbObject = (BasicDBList) JSON.parse(parameters);
-		mongoTemplate.insert(dbObject, type);
+		validateParameterType(type);
+		mongoTemplate.insert((BasicDBList) JSON.parse(parameters), type);
+	}
+
+	private void validateParameterType(String type) {
+		if (!mongoTemplate.collectionExists(type)) {
+			throw new NoSuchParameterExistsException();
+		}
 	}
 }

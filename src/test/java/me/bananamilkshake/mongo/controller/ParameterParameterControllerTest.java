@@ -1,8 +1,7 @@
-package me.bananamilkshake.controller;
+package me.bananamilkshake.mongo.controller;
 
 import lombok.extern.slf4j.Slf4j;
 import me.bananamilkshake.mongo.assembler.ParameterResponseAssembler;
-import me.bananamilkshake.mongo.controller.ParameterController;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -13,6 +12,8 @@ import org.springframework.http.ResponseEntity;
 
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.time.LocalDate;
+import java.time.Month;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Matchers.eq;
@@ -38,12 +39,14 @@ public class ParameterParameterControllerTest {
 		// given
 		final String parameterName = "Flowers";
 		final String parameters = "{ name: \"rose\", colour: \"yellow\" }";
+		final String user = "BestFlowersInc";
+		final LocalDate parameterDate = LocalDate.of(2017, Month.SEPTEMBER, 24);
 
 		// when
-		when(parameterResponseAssembler.getParameters(eq(parameterName))).thenReturn(ResponseEntity.ok(parameters));
+		when(parameterResponseAssembler.getParameters(eq(parameterName), user, parameterDate)).thenReturn(ResponseEntity.ok(parameters));
 
 		// then
-		final ResponseEntity result = parameterController.getParameters(parameterName);
+		final ResponseEntity result = parameterController.getParameters(parameterName, user, parameterDate);
 		assertThat(result.getStatusCode()).isEqualTo(HttpStatus.OK);
 		assertThat(result.getBody()).isEqualTo(parameters);
 	}

@@ -1,4 +1,4 @@
-package me.bananamilkshake.service;
+package me.bananamilkshake.mongo.service;
 
 import com.mongodb.CommandResult;
 import com.mongodb.MongoClient;
@@ -8,8 +8,6 @@ import de.flapdoodle.embed.mongo.config.IMongodConfig;
 import de.flapdoodle.embed.mongo.config.MongodConfigBuilder;
 import de.flapdoodle.embed.mongo.config.Net;
 import de.flapdoodle.embed.mongo.distribution.Version;
-import me.bananamilkshake.mongo.service.ParameterService;
-import me.bananamilkshake.mongo.service.ParameterServiceImpl;
 import me.bananamilkshake.mongo.service.validation.ValidationSetupService;
 import org.junit.After;
 import org.junit.AfterClass;
@@ -32,8 +30,9 @@ import static org.assertj.core.api.Assertions.catchThrowable;
 public class ParameterServiceTest {
 
 	private static final String LOCALHOST = "127.0.0.1";
-	private static final String DB_NAME = "test";
 	private static final int MONGO_TEST_PORT = 27028;
+
+	private static final String DB_NAME = "test";
 
 	private static final String PARAMETER_NAME = "someParameter";
 
@@ -41,6 +40,9 @@ public class ParameterServiceTest {
 	private static MongoClient mongoClient;
 
 	private MongoTemplate mongoTemplate;
+
+	@Mock
+	private QueryCreator queryCreator;
 
 	@Mock
 	private ValidationSetupService validationSetupService;
@@ -80,7 +82,7 @@ public class ParameterServiceTest {
 				"}");
 		assertThat(commandResult.ok()).isTrue();
 
-		parameterService = new ParameterServiceImpl(mongoTemplate, validationSetupService);
+		parameterService = new ParameterServiceImpl(mongoTemplate, queryCreator, validationSetupService);
 	}
 
 	@After
@@ -97,6 +99,28 @@ public class ParameterServiceTest {
 		if (nonNull(mongoProcess)) {
 			mongoProcess.stop();
 		}
+	}
+
+	@Test
+	public void shouldAcceptValidParameter() {
+
+		// given
+		final String parameters =
+				"[" +
+				"    {" +
+				"        user: \"SizeCompanyInc\"," +
+				"        validFrom: new Date(\"2017-01-01\"), " +
+				"        validTo: new Date(\"2017-12-31\"), " +
+				"        width: -1," +
+				"        height: \"hello\"" +
+				"    }" +
+				"]";
+
+		// when
+		Throwable thrown = catchThrowable(() -> parameterService.uploadParameters(PARAMETER_NAME, parameters));
+
+		// then
+		assertThat(thrown).isNull();
 	}
 
 	@Test

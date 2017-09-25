@@ -8,6 +8,7 @@ import org.springframework.stereotype.Component;
 
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.time.LocalDate;
 
 import static java.text.MessageFormat.format;
 
@@ -18,8 +19,8 @@ public class ParameterResponseAssembler {
 
 	private final ParameterService parameterService;
 
-	public ResponseEntity getParameters(String name) {
-		final String parameters = parameterService.getParameters(name);
+	public ResponseEntity getParameters(String name, String user, LocalDate date) {
+		final String parameters = parameterService.getParameters(name, user, date);
 		return ResponseEntity.ok(parameters);
 	}
 

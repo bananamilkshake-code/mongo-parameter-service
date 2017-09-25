@@ -2,6 +2,7 @@ package me.bananamilkshake.mongo.controller;
 
 import lombok.AllArgsConstructor;
 import me.bananamilkshake.mongo.assembler.ParameterResponseAssembler;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -10,7 +11,10 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.time.LocalDate;
 
 @RestController
 @RequestMapping("/parameter/{type}")
@@ -20,17 +24,21 @@ public class ParameterController {
 	private final ParameterResponseAssembler parameterResponseAssembler;
 
 	@GetMapping(produces = {MediaType.APPLICATION_JSON_VALUE})
-	public ResponseEntity getParameters(@PathVariable String type) {
-		return parameterResponseAssembler.getParameters(type);
+	public ResponseEntity getParameters(@PathVariable String type,
+										@RequestParam String user,
+										@RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date) {
+		return parameterResponseAssembler.getParameters(type, user, date);
 	}
 
 	@PostMapping(consumes = {MediaType.APPLICATION_JSON_VALUE})
-	public ResponseEntity createParameter(@PathVariable String type, @RequestBody(required = false) String validation) {
+	public ResponseEntity createParameter(@PathVariable String type,
+										  @RequestBody(required = false) String validation) {
 		return parameterResponseAssembler.createParameter(type, validation);
 	}
 
 	@PutMapping(consumes = {MediaType.APPLICATION_JSON_VALUE})
-	public ResponseEntity uploadParameters(@PathVariable String type, @RequestBody String parameters) {
+	public ResponseEntity uploadParameters(@PathVariable String type,
+										   @RequestBody String parameters) {
 		return parameterResponseAssembler.uploadParameters(type, parameters);
 	}
 }
