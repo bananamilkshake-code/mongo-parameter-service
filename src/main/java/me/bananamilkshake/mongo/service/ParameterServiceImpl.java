@@ -5,8 +5,10 @@ import com.mongodb.DBCursor;
 import com.mongodb.util.JSON;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import me.bananamilkshake.mongo.exception.CollectionAlreadyExistsException;
 import me.bananamilkshake.mongo.exception.NoSuchParameterExistsException;
 import me.bananamilkshake.mongo.service.validation.ValidationSetupService;
+import org.springframework.data.mongodb.UncategorizedMongoDbException;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -41,7 +43,11 @@ public class ParameterServiceImpl implements ParameterService {
 
 	@Override
 	public void createParameter(String type, String validation) {
-		mongoTemplate.createCollection(type);
+		try {
+			mongoTemplate.createCollection(type);
+		} catch (UncategorizedMongoDbException uncategorizedMongoDbException) {
+			throw new CollectionAlreadyExistsException(uncategorizedMongoDbException);
+		}
 		validationSetupService.setupValidation(mongoTemplate, type, validation);
 	}
 
