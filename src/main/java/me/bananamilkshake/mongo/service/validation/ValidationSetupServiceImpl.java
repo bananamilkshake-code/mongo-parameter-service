@@ -6,8 +6,6 @@ import me.bananamilkshake.mongo.exception.IncorrectValidationDescriptionExceptio
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.stereotype.Service;
 
-import static java.util.Objects.isNull;
-
 @Service
 @AllArgsConstructor
 public class ValidationSetupServiceImpl implements ValidationSetupService {
@@ -16,10 +14,6 @@ public class ValidationSetupServiceImpl implements ValidationSetupService {
 
 	@Override
 	public void setupValidation(MongoTemplate mongoTemplate, String parameterName, String validationDescription) {
-		if (isNull(validationDescription)) {
-			return;
-		}
-
 		final String validationCommand = validatorCommandAssembler.create(parameterName, validationDescription);
 		final CommandResult result = mongoTemplate.executeCommand(validationCommand);
 		if (!result.ok()) {
