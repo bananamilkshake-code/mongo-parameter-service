@@ -40,7 +40,8 @@ public class ValidatorCommandAssemblerTest {
 	public void setup() throws JsonProcessingException {
 		when(objectMapper.writeValueAsString(any())).thenReturn(STANDARD_VALIDATION);
 
-		validatorCommandAssembler = new ValidatorCommandAssembler(objectMapper);
+		validatorCommandAssembler = new ValidatorCommandAssembler();
+		validatorCommandAssembler.setObjectMapper(objectMapper);
 	}
 
 	@Test
