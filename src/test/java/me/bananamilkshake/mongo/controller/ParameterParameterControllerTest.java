@@ -26,11 +26,14 @@ public class ParameterParameterControllerTest {
 	private ParameterController parameterController;
 
 	@Mock
+	private ParameterCreationDescriptionParser parameterCreationDescriptionParser;
+
+	@Mock
 	private ParameterResponseAssembler parameterResponseAssembler;
 
 	@Before
 	public void before() {
-		parameterController = new ParameterController(parameterResponseAssembler);
+		parameterController = new ParameterController(parameterCreationDescriptionParser, parameterResponseAssembler);
 	}
 
 	@Test
@@ -59,7 +62,7 @@ public class ParameterParameterControllerTest {
 		final String pathToParameter = "/parameter/" + newParameterName;
 
 		// when
-		when(parameterResponseAssembler.createParameter(eq(newParameterName), eq(null))).thenReturn(ResponseEntity.created(uri(pathToParameter)).build());
+		when(parameterResponseAssembler.createParameter(eq(newParameterName), eq(null), eq(null))).thenReturn(ResponseEntity.created(uri(pathToParameter)).build());
 
 		// then
 		final ResponseEntity result = parameterController.createParameter(newParameterName, null);

@@ -8,6 +8,7 @@ import de.flapdoodle.embed.mongo.config.IMongodConfig;
 import de.flapdoodle.embed.mongo.config.MongodConfigBuilder;
 import de.flapdoodle.embed.mongo.config.Net;
 import de.flapdoodle.embed.mongo.distribution.Version;
+import me.bananamilkshake.mongo.service.index.IndexSetupService;
 import me.bananamilkshake.mongo.service.validation.ValidationSetupService;
 import org.junit.After;
 import org.junit.AfterClass;
@@ -47,6 +48,9 @@ public class ParameterServiceTest {
 	@Mock
 	private ValidationSetupService validationSetupService;
 
+	@Mock
+	private IndexSetupService indexSetupService;
+
 	private ParameterService parameterService;
 
 	@BeforeClass
@@ -82,7 +86,7 @@ public class ParameterServiceTest {
 				"}");
 		assertThat(commandResult.ok()).isTrue();
 
-		parameterService = new ParameterServiceImpl(mongoTemplate, queryCreator, validationSetupService);
+		parameterService = new ParameterServiceImpl(mongoTemplate, queryCreator, validationSetupService, indexSetupService);
 	}
 
 	@After

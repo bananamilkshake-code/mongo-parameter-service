@@ -18,8 +18,8 @@ class ValidatorCommandAssembler {
 	public void setObjectMapper(ObjectMapper objectMapper) {
 		try {
 			standardValidation = objectMapper.writeValueAsString(new ParameterValidator());
-		} catch (JsonProcessingException jsonParsingException) {
-			throw new RuntimeException("Failed to create JSON description from ParameterValidator object", jsonParsingException);
+		} catch (JsonProcessingException jsonProcessingException) {
+			throw new RuntimeException("Failed to create JSON description from ParameterValidator object", jsonProcessingException);
 		}
 	}
 

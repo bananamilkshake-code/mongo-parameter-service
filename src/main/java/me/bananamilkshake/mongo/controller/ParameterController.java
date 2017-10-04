@@ -21,6 +21,7 @@ import java.time.LocalDate;
 @AllArgsConstructor
 public class ParameterController {
 
+	private final ParameterCreationDescriptionParser parameterCreationDescriptionParser;
 	private final ParameterResponseAssembler parameterResponseAssembler;
 
 	@GetMapping(produces = {MediaType.APPLICATION_JSON_VALUE})
@@ -32,8 +33,9 @@ public class ParameterController {
 
 	@PostMapping(consumes = {MediaType.APPLICATION_JSON_VALUE})
 	public ResponseEntity createParameter(@PathVariable String type,
-										  @RequestBody(required = false) String validation) {
-		return parameterResponseAssembler.createParameter(type, validation);
+										  @RequestBody String descriptionValue) {
+		final ParameterCreationDescription description = parameterCreationDescriptionParser.parse(descriptionValue);
+		return parameterResponseAssembler.createParameter(type, description.getValidation(), description.getIndex());
 	}
 
 	@PutMapping(consumes = {MediaType.APPLICATION_JSON_VALUE})

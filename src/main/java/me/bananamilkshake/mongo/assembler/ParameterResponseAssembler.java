@@ -24,8 +24,8 @@ public class ParameterResponseAssembler {
 		return ResponseEntity.ok(parameters);
 	}
 
-	public ResponseEntity createParameter(String type, String validation) {
-		parameterService.createParameter(type, validation);
+	public ResponseEntity createParameter(String type, String validation, String index) {
+		parameterService.createParameter(type, validation, index);
 		return ResponseEntity.created(createParameterUri(type)).build();
 	}
 

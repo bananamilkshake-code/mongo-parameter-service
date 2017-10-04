@@ -7,6 +7,7 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import me.bananamilkshake.mongo.exception.CollectionAlreadyExistsException;
 import me.bananamilkshake.mongo.exception.NoSuchParameterExistsException;
+import me.bananamilkshake.mongo.service.index.IndexSetupService;
 import me.bananamilkshake.mongo.service.validation.ValidationSetupService;
 import org.springframework.data.mongodb.UncategorizedMongoDbException;
 import org.springframework.data.mongodb.core.MongoTemplate;
@@ -26,6 +27,7 @@ public class ParameterServiceImpl implements ParameterService {
 	private final QueryCreator queryCreator;
 
 	private final ValidationSetupService validationSetupService;
+	private final IndexSetupService indexSetupService;
 
 	@Override
 	public String getParameters(String type, String user, LocalDate date) {
@@ -42,13 +44,19 @@ public class ParameterServiceImpl implements ParameterService {
 	}
 
 	@Override
-	public void createParameter(String type, String validation) {
+	public void createParameter(String type, String validation, String index) {
 		try {
 			mongoTemplate.createCollection(type);
 		} catch (UncategorizedMongoDbException uncategorizedMongoDbException) {
 			throw new CollectionAlreadyExistsException(uncategorizedMongoDbException);
 		}
-		validationSetupService.setupValidation(mongoTemplate, type, validation);
+		try {
+			validationSetupService.setupValidation(mongoTemplate, type, validation);
+			indexSetupService.setupIndex(mongoTemplate, type, index);
+		} catch (Exception exception) {
+			mongoTemplate.dropCollection(type);
+			throw exception;
+		}
 	}
 
 	@Override
