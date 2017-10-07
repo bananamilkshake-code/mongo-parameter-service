@@ -21,7 +21,7 @@ class IndexDeclarationAssembler {
 		try {
 			standardIndexDescription = objectMapper.writeValueAsString(new IndexDescription());
 		} catch (JsonProcessingException jsonProcessingException) {
-			throw new RuntimeException("Failed to create JSON description from  IndexDescription object", jsonProcessingException);
+			throw new RuntimeException("Failed to create JSON description from IndexDescription object", jsonProcessingException);
 		}
 
 		standardIndex = (BSONObject) JSON.parse(standardIndexDescription);
