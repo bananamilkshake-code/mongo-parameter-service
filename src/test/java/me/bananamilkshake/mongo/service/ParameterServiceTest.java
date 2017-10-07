@@ -9,6 +9,7 @@ import de.flapdoodle.embed.mongo.config.MongodConfigBuilder;
 import de.flapdoodle.embed.mongo.config.Net;
 import de.flapdoodle.embed.mongo.distribution.Version;
 import me.bananamilkshake.mongo.service.index.IndexSetupService;
+import me.bananamilkshake.mongo.service.query.QueryCreator;
 import me.bananamilkshake.mongo.service.validation.ValidationSetupService;
 import org.junit.After;
 import org.junit.AfterClass;

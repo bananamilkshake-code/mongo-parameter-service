@@ -1,4 +1,4 @@
-package me.bananamilkshake.mongo.service;
+package me.bananamilkshake.mongo.service.query;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -11,17 +11,19 @@ import java.time.LocalDate;
 
 @Component
 @AllArgsConstructor
-class QueryCreator {
+public class QueryCreator {
 
 	private final ObjectMapper objectMapper;
 
-	BasicDBObject createDBObject(String user, LocalDate parameterDate) {
-		return BasicDBObject.parse(createFilter(user, parameterDate));
+	public BasicDBObject createDBObjectFilter(String user, LocalDate date) {
+		final String filter = createFilter(user, date);
+		return BasicDBObject.parse(filter);
 	}
 
-	private String createFilter(String user, LocalDate parameterDate) {
+	private String createFilter(String user, LocalDate date) {
 		try {
-			return objectMapper.writeValueAsString(new ParameterQuery(user, parameterDate));
+			final ParameterQuery parameterQuery = new ParameterQuery(user, date);
+			return objectMapper.writeValueAsString(parameterQuery);
 		} catch (JsonProcessingException jsonProcessingException) {
 			throw new RuntimeException("Could not deserialize query object to string", jsonProcessingException);
 		}

@@ -14,17 +14,17 @@ public class ParameterQuery implements Parameter {
 	private QueryObject<DateQueryType> validFrom;
 	private QueryObject<DateQueryType> validTo;
 
-	public ParameterQuery(String user, LocalDate parameterDate) {
+	public ParameterQuery(String user, LocalDate date) {
 		this.user = user;
-		setValidFrom(parameterDate);
-		setValidTo(parameterDate);
+		setValidFrom(date);
+		setValidTo(date);
 	}
 
 	private void setValidFrom(LocalDate value) {
-		validFrom = QueryObject.<DateQueryType>builder().gte(new DateQueryType(value)).<DateQueryType>build();
+		validFrom = QueryObject.<DateQueryType>builder().lte(new DateQueryType(value)).<DateQueryType>build();
 	}
 
 	private void setValidTo(LocalDate value) {
-		validTo = QueryObject.<DateQueryType>builder().lte(new DateQueryType(value)).<DateQueryType>build();
+		validTo = QueryObject.<DateQueryType>builder().gte(new DateQueryType(value)).<DateQueryType>build();
 	}
 }

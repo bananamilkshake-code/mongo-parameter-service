@@ -8,6 +8,7 @@ import lombok.extern.slf4j.Slf4j;
 import me.bananamilkshake.mongo.exception.CollectionAlreadyExistsException;
 import me.bananamilkshake.mongo.exception.NoSuchParameterExistsException;
 import me.bananamilkshake.mongo.service.index.IndexSetupService;
+import me.bananamilkshake.mongo.service.query.QueryCreator;
 import me.bananamilkshake.mongo.service.validation.ValidationSetupService;
 import org.springframework.data.mongodb.UncategorizedMongoDbException;
 import org.springframework.data.mongodb.core.MongoTemplate;
@@ -34,7 +35,7 @@ public class ParameterServiceImpl implements ParameterService {
 		validateParameterType(type);
 		return mongoTemplate.execute(type, collection -> {
 			final BasicDBList dbList = new BasicDBList();
-			try (DBCursor cursor = collection.find(queryCreator.createDBObject(user, date))) {
+			try (DBCursor cursor = collection.find(queryCreator.createDBObjectFilter(user, date))) {
 				while (cursor.hasNext()) {
 					dbList.add(cursor.next());
 				}
