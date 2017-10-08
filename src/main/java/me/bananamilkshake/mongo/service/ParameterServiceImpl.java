@@ -2,11 +2,11 @@ package me.bananamilkshake.mongo.service;
 
 import com.mongodb.BasicDBList;
 import com.mongodb.DBCursor;
-import com.mongodb.util.JSON;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import me.bananamilkshake.mongo.exception.CollectionAlreadyExistsException;
 import me.bananamilkshake.mongo.exception.NoSuchParameterExistsException;
+import me.bananamilkshake.mongo.service.UploadService.UploadMode;
 import me.bananamilkshake.mongo.service.index.IndexSetupService;
 import me.bananamilkshake.mongo.service.query.QueryCreator;
 import me.bananamilkshake.mongo.service.validation.ValidationSetupService;
@@ -30,6 +30,8 @@ public class ParameterServiceImpl implements ParameterService {
 	private final ValidationSetupService validationSetupService;
 	private final IndexSetupService indexSetupService;
 
+	private final UploadService uploadService;
+
 	@Override
 	public String getParameters(String type, String user, LocalDate date) {
 		validateParameterType(type);
@@ -51,6 +53,7 @@ public class ParameterServiceImpl implements ParameterService {
 		} catch (UncategorizedMongoDbException uncategorizedMongoDbException) {
 			throw new CollectionAlreadyExistsException(uncategorizedMongoDbException);
 		}
+
 		try {
 			validationSetupService.setupValidation(mongoTemplate, type, validation);
 			indexSetupService.setupIndex(mongoTemplate, type, index);
@@ -61,9 +64,9 @@ public class ParameterServiceImpl implements ParameterService {
 	}
 
 	@Override
-	public void uploadParameters(String type, String parameters) {
+	public void uploadParameters(String type, String parameters, UploadMode uploadMode) {
 		validateParameterType(type);
-		mongoTemplate.insert((BasicDBList) JSON.parse(parameters), type);
+		uploadMode.upload(uploadService, type, parameters);
 	}
 
 	private void validateParameterType(String type) {

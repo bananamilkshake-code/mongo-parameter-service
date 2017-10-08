@@ -3,6 +3,7 @@ package me.bananamilkshake.mongo.assembler;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import me.bananamilkshake.mongo.service.ParameterService;
+import me.bananamilkshake.mongo.service.UploadService.UploadMode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 
@@ -29,8 +30,8 @@ public class ParameterResponseAssembler {
 		return ResponseEntity.created(createParameterUri(type)).build();
 	}
 
-	public ResponseEntity uploadParameters(String type, String parameters) {
-		parameterService.uploadParameters(type, parameters);
+	public ResponseEntity uploadParameters(String type, String parameters, UploadMode uploadMode) {
+		parameterService.uploadParameters(type, parameters, uploadMode);
 		return ResponseEntity.accepted().build();
 	}
 

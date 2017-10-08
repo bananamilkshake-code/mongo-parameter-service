@@ -52,6 +52,9 @@ public class ParameterServiceTest {
 	@Mock
 	private IndexSetupService indexSetupService;
 
+	@Mock
+	private UploadService uploadService;
+
 	private ParameterService parameterService;
 
 	@BeforeClass
@@ -87,7 +90,7 @@ public class ParameterServiceTest {
 				"}");
 		assertThat(commandResult.ok()).isTrue();
 
-		parameterService = new ParameterServiceImpl(mongoTemplate, queryCreator, validationSetupService, indexSetupService);
+		parameterService = new ParameterServiceImpl(mongoTemplate, queryCreator, validationSetupService, indexSetupService, uploadService);
 	}
 
 	@After
@@ -120,9 +123,10 @@ public class ParameterServiceTest {
 				"        height: \"hello\"" +
 				"    }" +
 				"]";
+		final UploadService.UploadMode uploadMode = UploadService.UploadMode.INSERT_NEW;
 
 		// when
-		Throwable thrown = catchThrowable(() -> parameterService.uploadParameters(PARAMETER_NAME, parameters));
+		Throwable thrown = catchThrowable(() -> parameterService.uploadParameters(PARAMETER_NAME, parameters, uploadMode));
 
 		// then
 		assertThat(thrown).isNull();
@@ -139,9 +143,10 @@ public class ParameterServiceTest {
 				"        height: \"hello\"" +
 				"    }" +
 				"]";
+		final UploadService.UploadMode uploadMode = UploadService.UploadMode.INSERT_NEW;
 
 		// when
-		Throwable thrown = catchThrowable(() -> parameterService.uploadParameters(PARAMETER_NAME, invalidParameters));
+		Throwable thrown = catchThrowable(() -> parameterService.uploadParameters(PARAMETER_NAME, invalidParameters, uploadMode));
 
 		// then
 		assertThat(thrown).isInstanceOf(DataIntegrityViolationException.class);

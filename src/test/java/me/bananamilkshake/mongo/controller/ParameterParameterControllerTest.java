@@ -2,6 +2,7 @@ package me.bananamilkshake.mongo.controller;
 
 import lombok.extern.slf4j.Slf4j;
 import me.bananamilkshake.mongo.assembler.ParameterResponseAssembler;
+import me.bananamilkshake.mongo.service.UploadService;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -76,12 +77,13 @@ public class ParameterParameterControllerTest {
 		// given
 		final String parameterName = "Flowers";
 		final String parameters = "{ name: \"rose\", colour: \"yellow\" }";
+		UploadService.UploadMode uploadMode = UploadService.UploadMode.INSERT_NEW;
 
 		// when
-		when(parameterResponseAssembler.uploadParameters(eq(parameterName), eq(parameters))).thenReturn(ResponseEntity.accepted().build());
+		when(parameterResponseAssembler.uploadParameters(eq(parameterName), eq(parameters), uploadMode)).thenReturn(ResponseEntity.accepted().build());
 
 		// then
-		final ResponseEntity result = parameterController.uploadParameters(parameterName, parameters);
+		final ResponseEntity result = parameterController.uploadParameters(parameterName, parameters, uploadMode);
 		assertThat(result.getStatusCode()).isEqualTo(HttpStatus.ACCEPTED);
 		assertThat(result.getBody()).isNull();
 	}

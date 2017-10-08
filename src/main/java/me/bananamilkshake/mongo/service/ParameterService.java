@@ -1,5 +1,7 @@
 package me.bananamilkshake.mongo.service;
 
+import me.bananamilkshake.mongo.service.UploadService.UploadMode;
+
 import java.time.LocalDate;
 
 public interface ParameterService {
@@ -8,5 +10,5 @@ public interface ParameterService {
 
 	void createParameter(String parameterMeta, String validation, String index);
 
-	void uploadParameters(String type, String parameters);
+	void uploadParameters(String type, String parameters, UploadMode uploadMode);
 }
