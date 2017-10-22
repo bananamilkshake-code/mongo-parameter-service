@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
+import java.util.Set;
 
 @Slf4j
 @Service
@@ -31,6 +32,11 @@ public class ParameterServiceImpl implements ParameterService {
 	private final IndexSetupService indexSetupService;
 
 	private final UploadService uploadService;
+
+	@Override
+	public Set<String> getTypes() {
+		return mongoTemplate.getCollectionNames();
+	}
 
 	@Override
 	public String getParameters(String type, String user, LocalDate date) {
