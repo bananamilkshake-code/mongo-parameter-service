@@ -1,0 +1,1 @@
+{"user":"RO","validFrom":{"$lte": ISODate("2017-10-04T00:00:00.000Z")},"validTo":{"$gte": ISODate("2017-10-04T00:00:00.000Z")}}

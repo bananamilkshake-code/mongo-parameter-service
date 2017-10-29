@@ -1,0 +1,156 @@
+[
+	{
+		"user": "RO",
+		"validFrom": {
+			"$date": "2017-01-01T00:00:00.0Z"
+		},
+		"validTo": {
+			"$date": "2017-12-31T00:00:00.0Z"
+		},
+		"name": "parameter1",
+		"value": 10
+	},
+	{
+		"user": "RO",
+		"validFrom": {
+			"$date": "2017-01-01T00:00:00.0Z"
+		},
+		"validTo": {
+			"$date": "2017-12-31T00:00:00.0Z"
+		},
+		"name": "parameter2",
+		"value": 130
+	},
+	{
+		"user": "RO",
+		"validFrom": {
+			"$date": "2017-01-01T00:00:00.0Z"
+		},
+		"validTo": {
+			"$date": "2017-12-31T00:00:00.0Z"
+		},
+		"name": "parameter3",
+		"value": 34
+	},
+	{
+		"user": "RO",
+		"validFrom": {
+			"$date": "2017-01-01T00:00:00.0Z"
+		},
+		"validTo": {
+			"$date": "2017-12-31T00:00:00.0Z"
+		},
+		"name": "parameter4",
+		"value": 76
+	},
+	{
+		"user": "RO",
+		"validFrom": {
+			"$date": "2017-01-01T00:00:00.0Z"
+		},
+		"validTo": {
+			"$date": "2017-12-31T00:00:00.0Z"
+		},
+		"name": "parameter5",
+		"value": 45
+	},
+	{
+		"user": "RO",
+		"validFrom": {
+			"$date": "2017-01-01T00:00:00.0Z"
+		},
+		"validTo": {
+			"$date": "2017-12-31T00:00:00.0Z"
+		},
+		"name": "parameter6",
+		"value": 23
+	},
+	{
+		"user": "RO",
+		"validFrom": {
+			"$date": "2017-01-01T00:00:00.0Z"
+		},
+		"validTo": {
+			"$date": "2017-12-31T00:00:00.0Z"
+		},
+		"name": "parameter7",
+		"value": 89
+	},
+	{
+		"user": "RO",
+		"validFrom": {
+			"$date": "2017-01-01T00:00:00.0Z"
+		},
+		"validTo": {
+			"$date": "2017-12-31T00:00:00.0Z"
+		},
+		"name": "parameter8",
+		"value": 23
+	},
+	{
+		"user": "RO",
+		"validFrom": {
+			"$date": "2017-01-01T00:00:00.0Z"
+		},
+		"validTo": {
+			"$date": "2017-12-31T00:00:00.0Z"
+		},
+		"name": "parameter9",
+		"value": 78
+	},
+	{
+		"user": "RO",
+		"validFrom": {
+			"$date": "2017-01-01T00:00:00.0Z"
+		},
+		"validTo": {
+			"$date": "2017-12-31T00:00:00.0Z"
+		},
+		"name": "parameter10",
+		"value": 23
+	},
+	{
+		"user": "RO",
+		"validFrom": {
+			"$date": "2017-01-01T00:00:00.0Z"
+		},
+		"validTo": {
+			"$date": "2017-12-31T00:00:00.0Z"
+		},
+		"name": "parameter11",
+		"value": 67
+	},
+	{
+		"user": "RO",
+		"validFrom": {
+			"$date": "2017-01-01T00:00:00.0Z"
+		},
+		"validTo": {
+			"$date": "2017-12-31T00:00:00.0Z"
+		},
+		"name": "parameter12",
+		"value": 34
+	},
+	{
+		"user": "RO",
+		"validFrom": {
+			"$date": "2017-01-01T00:00:00.0Z"
+		},
+		"validTo": {
+			"$date": "2017-12-31T00:00:00.0Z"
+		},
+		"name": "parameter13",
+		"value": 45
+	},
+	{
+		"user": "RO",
+		"validFrom": {
+			"$date": "2017-01-01T00:00:00.0Z"
+		},
+		"validTo": {
+			"$date": "2017-12-31T00:00:00.0Z"
+		},
+		"name": "parameter14",
+		"value": 33
+	}
+]
