@@ -1,16 +1,25 @@
 {
-	"index": {
-		"name": 1
+  "index": {
+	"user": 1,
+	"validFrom": 1
+  },
+  "validation": {
+	"user": {
+	  "$exists": "true",
+	  "$type": "string"
 	},
-	"validation": {
-		"name": {
-			"$exists": "true",
-			"$type": "string"
-		},
-		"value": {
-			"$exists": "true",
-			"$type": "number",
-			"$gt": 0
-		}
+	"validFrom": {
+	  "$exists": "true",
+	  "$type": "date"
+	},
+	"values.name": {
+	  "$exists": "true",
+	  "$type": "string"
+	},
+	"values.value": {
+	  "$exists": "true",
+	  "$type": "number",
+	  "$gt": 0
 	}
+  }
 }
