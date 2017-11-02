@@ -13,5 +13,5 @@ public interface ParameterService {
 
 	void createParameter(String parameterMeta, String validation, String index);
 
-	void uploadParameters(String type, String parameters, UploadMode uploadMode);
+	void uploadParameters(String type, String user, LocalDate validFrom, String values, UploadMode uploadMode);
 }

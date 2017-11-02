@@ -46,11 +46,12 @@ public class ParameterParameterControllerTest {
 		final String user = "BestFlowersInc";
 		final LocalDate parameterDate = LocalDate.of(2017, Month.SEPTEMBER, 24);
 
-		// when
 		when(parameterResponseAssembler.getParameters(eq(parameterName), user, parameterDate)).thenReturn(ResponseEntity.ok(parameters));
 
-		// then
+		// when
 		final ResponseEntity result = parameterController.getParameters(parameterName, user, parameterDate);
+
+		// then
 		assertThat(result.getStatusCode()).isEqualTo(HttpStatus.OK);
 		assertThat(result.getBody()).isEqualTo(parameters);
 	}
@@ -62,11 +63,12 @@ public class ParameterParameterControllerTest {
 		final String newParameterName = "newParameter";
 		final String pathToParameter = "/parameter/" + newParameterName;
 
-		// when
 		when(parameterResponseAssembler.createParameter(eq(newParameterName), eq(null), eq(null))).thenReturn(ResponseEntity.created(uri(pathToParameter)).build());
 
-		// then
+		// when
 		final ResponseEntity result = parameterController.createParameter(newParameterName, null);
+
+		// then
 		assertThat(result.getStatusCode()).isEqualTo(HttpStatus.CREATED);
 		assertThat(result.getHeaders().getLocation().getPath()).isEqualTo(pathToParameter);
 	}
@@ -76,14 +78,18 @@ public class ParameterParameterControllerTest {
 
 		// given
 		final String parameterName = "Flowers";
-		final String parameters = "{ name: \"rose\", colour: \"yellow\" }";
+		final String user = "Rose";
+		final LocalDate validFrom = LocalDate.of(2017, 11, 3);
+
+		final String parameters = "[{ colour: \"yellow\" }]";
 		UploadService.UploadMode uploadMode = UploadService.UploadMode.INSERT_NEW;
 
+		when(parameterResponseAssembler.uploadParameters(eq(parameterName), user, validFrom, eq(parameters), uploadMode)).thenReturn(ResponseEntity.accepted().build());
+
 		// when
-		when(parameterResponseAssembler.uploadParameters(eq(parameterName), eq(parameters), uploadMode)).thenReturn(ResponseEntity.accepted().build());
+		final ResponseEntity result = parameterController.uploadParameters(parameterName, user, validFrom, parameters, uploadMode);
 
 		// then
-		final ResponseEntity result = parameterController.uploadParameters(parameterName, parameters, uploadMode);
 		assertThat(result.getStatusCode()).isEqualTo(HttpStatus.ACCEPTED);
 		assertThat(result.getBody()).isNull();
 	}

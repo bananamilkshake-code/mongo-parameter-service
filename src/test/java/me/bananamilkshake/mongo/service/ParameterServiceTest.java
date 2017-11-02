@@ -23,6 +23,7 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.mongodb.core.MongoTemplate;
 
 import java.io.IOException;
+import java.time.LocalDate;
 
 import static java.util.Objects.nonNull;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -37,6 +38,8 @@ public class ParameterServiceTest {
 	private static final String DB_NAME = "test";
 
 	private static final String PARAMETER_NAME = "someParameter";
+	private static final String PARAMETER_USER = "someUser";
+	private static final LocalDate PARAMETER_VALID_FROM = LocalDate.of(2017, 11, 3);
 
 	private static MongodProcess mongoProcess;
 	private static MongoClient mongoClient;
@@ -88,7 +91,7 @@ public class ParameterServiceTest {
 				"        ]" +
 				"    }" +
 				"}");
-		assertThat(commandResult.ok()).isTrue();
+		assertThat(commandResult.ok()).isTrue().as("Failed to setup parameter validation");
 
 		parameterService = new ParameterServiceImpl(mongoTemplate, queryCreator, validationSetupService, indexSetupService, uploadService);
 	}
@@ -116,9 +119,6 @@ public class ParameterServiceTest {
 		final String parameters =
 				"[" +
 				"    {" +
-				"        user: \"SizeCompanyInc\"," +
-				"        validFrom: new Date(\"2017-01-01\"), " +
-				"        validTo: new Date(\"2017-12-31\"), " +
 				"        width: -1," +
 				"        height: \"hello\"" +
 				"    }" +
@@ -126,7 +126,7 @@ public class ParameterServiceTest {
 		final UploadService.UploadMode uploadMode = UploadService.UploadMode.INSERT_NEW;
 
 		// when
-		Throwable thrown = catchThrowable(() -> parameterService.uploadParameters(PARAMETER_NAME, parameters, uploadMode));
+		Throwable thrown = catchThrowable(() -> parameterService.uploadParameters(PARAMETER_NAME, PARAMETER_USER, PARAMETER_VALID_FROM, parameters, uploadMode));
 
 		// then
 		assertThat(thrown).isNull();
@@ -139,14 +139,13 @@ public class ParameterServiceTest {
 		final String invalidParameters =
 				"[" +
 				"    {" +
-				"        width: -1," +
 				"        height: \"hello\"" +
 				"    }" +
 				"]";
 		final UploadService.UploadMode uploadMode = UploadService.UploadMode.INSERT_NEW;
 
 		// when
-		Throwable thrown = catchThrowable(() -> parameterService.uploadParameters(PARAMETER_NAME, invalidParameters, uploadMode));
+		Throwable thrown = catchThrowable(() -> parameterService.uploadParameters(PARAMETER_NAME, PARAMETER_USER, PARAMETER_VALID_FROM, invalidParameters, uploadMode));
 
 		// then
 		assertThat(thrown).isInstanceOf(DataIntegrityViolationException.class);

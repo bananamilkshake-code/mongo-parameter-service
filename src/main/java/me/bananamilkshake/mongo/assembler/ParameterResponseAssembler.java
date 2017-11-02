@@ -30,8 +30,12 @@ public class ParameterResponseAssembler {
 		return ResponseEntity.created(createParameterUri(type)).build();
 	}
 
-	public ResponseEntity uploadParameters(String type, String parameters, UploadMode uploadMode) {
-		parameterService.uploadParameters(type, parameters, uploadMode);
+	public ResponseEntity uploadParameters(String type,
+										   String user,
+										   LocalDate validFrom,
+										   String values,
+										   UploadMode uploadMode) {
+		parameterService.uploadParameters(type, user, validFrom, values, uploadMode);
 		return ResponseEntity.accepted().build();
 	}
 

@@ -40,8 +40,10 @@ public class ParameterController {
 
 	@PostMapping(path = "/upload", consumes = {MediaType.APPLICATION_JSON_VALUE})
 	public ResponseEntity uploadParameters(@PathVariable String type,
-										   @RequestBody String parameters,
+										   @RequestParam String user,
+										   @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate validFrom,
+										   @RequestBody String values,
 										   @RequestParam(required = false, defaultValue = "INSERT_NEW") UploadMode uploadMode) {
-		return parameterResponseAssembler.uploadParameters(type, parameters, uploadMode);
+		return parameterResponseAssembler.uploadParameters(type, user, validFrom, values, uploadMode);
 	}
 }

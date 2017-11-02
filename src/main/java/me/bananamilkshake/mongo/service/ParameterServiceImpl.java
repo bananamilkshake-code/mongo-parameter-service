@@ -70,9 +70,13 @@ public class ParameterServiceImpl implements ParameterService {
 	}
 
 	@Override
-	public void uploadParameters(String type, String parameters, UploadMode uploadMode) {
+	public void uploadParameters(String type,
+								 String user,
+								 LocalDate validFrom,
+								 String values,
+								 UploadMode uploadMode) {
 		validateParameterType(type);
-		uploadMode.upload(uploadService, type, parameters);
+		uploadMode.upload(uploadService, type, user, validFrom, values);
 	}
 
 	private void validateParameterType(String type) {
