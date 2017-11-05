@@ -1,4 +1,4 @@
-package me.bananamilkshake.mongo.domain.query;
+package me.bananamilkshake.mongo.domain.aggregation.match.field;
 
 import com.fasterxml.jackson.annotation.JsonRawValue;
 import com.fasterxml.jackson.annotation.JsonValue;
@@ -10,7 +10,7 @@ import static java.text.MessageFormat.format;
 import static java.time.format.DateTimeFormatter.ISO_LOCAL_DATE;
 
 @AllArgsConstructor
-public class DateQueryType {
+public class LocalDateField {
 
 	private final LocalDate localDate;
 

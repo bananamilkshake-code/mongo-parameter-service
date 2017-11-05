@@ -2,13 +2,14 @@ package me.bananamilkshake.mongo.domain;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import me.bananamilkshake.mongo.domain.aggregation.match.MatchDescription;
 import org.junit.Test;
 
 import java.time.LocalDate;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class ParameterQueryTest {
+public class MatchDescriptionTest {
 
 	@Test
 	public void shouldBeSerializedToJson() throws JsonProcessingException {
@@ -18,7 +19,7 @@ public class ParameterQueryTest {
 		final ObjectMapper objectMapper = new ObjectMapper();
 
 		// when
-		final String serialized = objectMapper.writeValueAsString(new ParameterQuery(user, date));
+		final String serialized = objectMapper.writeValueAsString(new MatchDescription(user, date));
 
 		// then
 		final String expected = "{ \"user\" : \"RO\", \"validFrom\" : { \"$lte\" : ISODate(\"2017-10-07\" ) }, \"validTo\" : { \"$gte\" : ISODate(\"2017-10-07\" ) } }";

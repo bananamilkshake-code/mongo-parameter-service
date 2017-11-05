@@ -4,6 +4,7 @@ import me.bananamilkshake.mongo.domain.validation.TypeValidation;
 
 public class ParameterValidator implements Parameter {
 
+	@Override
 	public TypeValidation getUser() {
 		return TypeValidation.builder()
 				.exists("true")
@@ -11,14 +12,8 @@ public class ParameterValidator implements Parameter {
 				.<TypeValidation>build();
 	}
 
+	@Override
 	public TypeValidation getValidFrom() {
-		return TypeValidation.builder()
-				.exists("true")
-				.type("date")
-				.<TypeValidation>build();
-	}
-
-	public TypeValidation getValidTo() {
 		return TypeValidation.builder()
 				.exists("true")
 				.type("date")

@@ -1,18 +1,15 @@
-package me.bananamilkshake.mongo.domain.query;
+package me.bananamilkshake.mongo.domain.aggregation.match.field;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.Builder;
+import lombok.AllArgsConstructor;
 
 import static com.fasterxml.jackson.annotation.JsonInclude.Include.NON_NULL;
 
-@Builder
+@AllArgsConstructor
 @JsonInclude(NON_NULL)
-public class QueryObject<Type> {
+public class EqualMatchField<Type> {
 
-	@JsonProperty("$gte")
-	private Type gte;
-
-	@JsonProperty("$lte")
-	private Type lte;
+	@JsonProperty("$eq")
+	private Type eq;
 }

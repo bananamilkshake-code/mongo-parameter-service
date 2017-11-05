@@ -1,14 +1,14 @@
 package me.bananamilkshake.mongo.service;
 
-import com.mongodb.BasicDBList;
-import com.mongodb.DBCursor;
+import com.mongodb.AggregationOutput;
+import com.mongodb.DBObject;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import me.bananamilkshake.mongo.exception.CollectionAlreadyExistsException;
 import me.bananamilkshake.mongo.exception.NoSuchParameterExistsException;
 import me.bananamilkshake.mongo.service.UploadService.UploadMode;
 import me.bananamilkshake.mongo.service.index.IndexSetupService;
-import me.bananamilkshake.mongo.service.query.QueryCreator;
+import me.bananamilkshake.mongo.service.query.AggregationFilterCreator;
 import me.bananamilkshake.mongo.service.validation.ValidationSetupService;
 import org.springframework.data.mongodb.UncategorizedMongoDbException;
 import org.springframework.data.mongodb.core.MongoTemplate;
@@ -16,7 +16,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
+import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
 
 @Slf4j
 @Service
@@ -26,7 +29,7 @@ public class ParameterServiceImpl implements ParameterService {
 
 	private final MongoTemplate mongoTemplate;
 
-	private final QueryCreator queryCreator;
+	private final AggregationFilterCreator aggregationFilterCreator;
 
 	private final ValidationSetupService validationSetupService;
 	private final IndexSetupService indexSetupService;
@@ -42,13 +45,12 @@ public class ParameterServiceImpl implements ParameterService {
 	public String getParameters(String type, String user, LocalDate date) {
 		validateParameterType(type);
 		return mongoTemplate.execute(type, collection -> {
-			final BasicDBList dbList = new BasicDBList();
-			try (DBCursor cursor = collection.find(queryCreator.createDBObjectFilter(user, date))) {
-				while (cursor.hasNext()) {
-					dbList.add(cursor.next());
-				}
-			}
-			return dbList.toString();
+			List<DBObject> aggregationFilter = aggregationFilterCreator.create(user, date);
+			AggregationOutput aggregationOutput = collection.aggregate(aggregationFilter);
+			return StreamSupport
+					.stream(aggregationOutput.results().spliterator(), false)
+					.collect(Collectors.toList())
+					.toString();
 		});
 	}
 

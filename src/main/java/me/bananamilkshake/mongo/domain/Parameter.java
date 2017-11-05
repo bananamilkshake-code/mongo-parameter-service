@@ -7,7 +7,5 @@ package me.bananamilkshake.mongo.domain;
 public interface Parameter {
 
 	Object getUser();
-
 	Object getValidFrom();
-	Object getValidTo();
 }

@@ -13,9 +13,4 @@ public class IndexDescription implements Parameter {
 	public Object getValidFrom() {
 		return 1;
 	}
-
-	@Override
-	public Object getValidTo() {
-		return 1;
-	}
 }

@@ -9,7 +9,7 @@ import de.flapdoodle.embed.mongo.config.MongodConfigBuilder;
 import de.flapdoodle.embed.mongo.config.Net;
 import de.flapdoodle.embed.mongo.distribution.Version;
 import me.bananamilkshake.mongo.service.index.IndexSetupService;
-import me.bananamilkshake.mongo.service.query.QueryCreator;
+import me.bananamilkshake.mongo.service.query.AggregationFilterCreator;
 import me.bananamilkshake.mongo.service.validation.ValidationSetupService;
 import org.junit.After;
 import org.junit.AfterClass;
@@ -47,7 +47,7 @@ public class ParameterServiceTest {
 	private MongoTemplate mongoTemplate;
 
 	@Mock
-	private QueryCreator queryCreator;
+	private AggregationFilterCreator aggregationFilterCreator;
 
 	@Mock
 	private ValidationSetupService validationSetupService;
@@ -93,7 +93,7 @@ public class ParameterServiceTest {
 				"}");
 		assertThat(commandResult.ok()).isTrue().as("Failed to setup parameter validation");
 
-		parameterService = new ParameterServiceImpl(mongoTemplate, queryCreator, validationSetupService, indexSetupService, uploadService);
+		parameterService = new ParameterServiceImpl(mongoTemplate, aggregationFilterCreator, validationSetupService, indexSetupService, uploadService);
 	}
 
 	@After
