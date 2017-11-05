@@ -2,6 +2,7 @@ package me.bananamilkshake.mongo.service.validation;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import me.bananamilkshake.mongo.service.values.ValuesPreparationService;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -17,6 +18,9 @@ public class ValidatorCommandAssemblerTest {
 
 	@Mock
 	private ObjectMapper objectMapper;
+
+	@Mock
+	private ValuesPreparationService valuesPreparationService;
 
 	private ValidatorCommandAssembler validatorCommandAssembler;
 
@@ -40,7 +44,7 @@ public class ValidatorCommandAssemblerTest {
 	public void setup() throws JsonProcessingException {
 		when(objectMapper.writeValueAsString(any())).thenReturn(STANDARD_VALIDATION);
 
-		validatorCommandAssembler = new ValidatorCommandAssembler();
+		validatorCommandAssembler = new ValidatorCommandAssembler(valuesPreparationService);
 		validatorCommandAssembler.setObjectMapper(objectMapper);
 	}
 

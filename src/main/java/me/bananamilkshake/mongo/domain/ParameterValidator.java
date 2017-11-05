@@ -1,22 +1,25 @@
 package me.bananamilkshake.mongo.domain;
 
-import me.bananamilkshake.mongo.domain.validation.TypeValidation;
+import me.bananamilkshake.mongo.domain.validation.FieldValidator;
 
 public class ParameterValidator implements Parameter {
 
+	private static final String TYPE_STRING = "string";
+	private static final String TYPE_DATE = "date";
+
 	@Override
-	public TypeValidation getUser() {
-		return TypeValidation.builder()
+	public FieldValidator getUser() {
+		return FieldValidator.builder()
 				.exists("true")
-				.type("string")
-				.<TypeValidation>build();
+				.type(TYPE_STRING)
+				.build();
 	}
 
 	@Override
-	public TypeValidation getValidFrom() {
-		return TypeValidation.builder()
+	public FieldValidator getValidFrom() {
+		return FieldValidator.builder()
 				.exists("true")
-				.type("date")
-				.<TypeValidation>build();
+				.type(TYPE_DATE)
+				.build();
 	}
 }
