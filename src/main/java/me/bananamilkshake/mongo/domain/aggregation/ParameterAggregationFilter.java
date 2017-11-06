@@ -1,4 +1,4 @@
-package me.bananamilkshake.mongo.domain;
+package me.bananamilkshake.mongo.domain.aggregation;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.NoArgsConstructor;

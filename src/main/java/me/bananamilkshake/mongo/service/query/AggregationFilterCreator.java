@@ -5,7 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mongodb.BasicDBObject;
 import com.mongodb.DBObject;
 import lombok.AllArgsConstructor;
-import me.bananamilkshake.mongo.domain.ParameterAggregationFilter;
+import me.bananamilkshake.mongo.domain.aggregation.ParameterAggregationFilter;
 import me.bananamilkshake.mongo.domain.aggregation.match.MatchDescription;
 import me.bananamilkshake.mongo.domain.aggregation.sort.SortDescription;
 import org.springframework.stereotype.Component;
