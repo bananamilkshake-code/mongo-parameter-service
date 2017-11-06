@@ -1,8 +1,8 @@
 package me.bananamilkshake.mongo.domain.index;
 
-import me.bananamilkshake.mongo.domain.Parameter;
+import me.bananamilkshake.mongo.domain.ParameterBase;
 
-public class IndexDescription implements Parameter {
+public class IndexDescription implements ParameterBase {
 
 	@Override
 	public Object getUser() {

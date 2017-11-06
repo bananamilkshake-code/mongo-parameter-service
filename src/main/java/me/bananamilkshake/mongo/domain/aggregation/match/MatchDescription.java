@@ -1,7 +1,7 @@
 package me.bananamilkshake.mongo.domain.aggregation.match;
 
 import lombok.Getter;
-import me.bananamilkshake.mongo.domain.Parameter;
+import me.bananamilkshake.mongo.domain.ParameterBase;
 import me.bananamilkshake.mongo.domain.aggregation.match.field.ComparableMatchField;
 import me.bananamilkshake.mongo.domain.aggregation.match.field.EqualMatchField;
 import me.bananamilkshake.mongo.domain.aggregation.match.field.LocalDateField;
@@ -9,7 +9,7 @@ import me.bananamilkshake.mongo.domain.aggregation.match.field.LocalDateField;
 import java.time.LocalDate;
 
 @Getter
-public class MatchDescription implements Parameter {
+public class MatchDescription implements ParameterBase {
 
 	private EqualMatchField<String> user;
 	private ComparableMatchField<LocalDateField> validFrom;

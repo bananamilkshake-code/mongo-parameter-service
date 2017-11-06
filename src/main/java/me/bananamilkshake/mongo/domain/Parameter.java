@@ -1,11 +1,14 @@
 package me.bananamilkshake.mongo.domain;
 
-/**
- * This interface is created to trace any changes in necessary parameter
- * fields. Query and Validation classes should be implemented from that.
- */
-public interface Parameter {
+import lombok.Value;
 
-	Object getUser();
-	Object getValidFrom();
+import java.time.LocalDate;
+import java.util.List;
+
+@Value
+public class Parameter<V> implements ParameterBase {
+
+	private String user;
+	private LocalDate validFrom;
+	private List<V> values;
 }

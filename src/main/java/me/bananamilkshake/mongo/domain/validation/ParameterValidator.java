@@ -1,8 +1,8 @@
-package me.bananamilkshake.mongo.domain;
+package me.bananamilkshake.mongo.domain.validation;
 
-import me.bananamilkshake.mongo.domain.validation.FieldValidator;
+import me.bananamilkshake.mongo.domain.ParameterBase;
 
-public class ParameterValidator implements Parameter {
+public class ParameterValidator implements ParameterBase {
 
 	private static final String TYPE_STRING = "string";
 	private static final String TYPE_DATE = "date";
