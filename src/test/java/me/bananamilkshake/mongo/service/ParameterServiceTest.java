@@ -75,20 +75,18 @@ public class ParameterServiceTest {
 				"{" +
 				"    collMod: \"" + PARAMETER_NAME + "\"," +
 				"    validator: {" +
-				"        $and: [" +
-				"            {" +
-				"                width: {" +
-				"                    $exists: \"true\"," +
-				"                    $type: \"number\"," +
-				"                    $gte: 0" +
-				"                }," +
-				"                height: {" +
-				"                    $exists: \"true\"," +
-				"                    $type: \"number\"," +
-				"                    $gte: 0" +
-				"                }" +
+				"        {" +
+				"            width: {" +
+				"                $exists: \"true\"," +
+				"                $type: \"number\"," +
+				"                $gte: 0" +
+				"            }," +
+				"            height: {" +
+				"                $exists: \"true\"," +
+				"                $type: \"number\"," +
+				"                $gte: 0" +
 				"            }" +
-				"        ]" +
+				"        }" +
 				"    }" +
 				"}");
 		assertThat(commandResult.ok()).isTrue().as("Failed to setup parameter validation");
@@ -123,7 +121,7 @@ public class ParameterServiceTest {
 				"        height: \"hello\"" +
 				"    }" +
 				"]";
-		final UploadService.UploadMode uploadMode = UploadService.UploadMode.INSERT_NEW;
+		final UploadService.UploadMode uploadMode = UploadService.UploadMode.INSERT;
 
 		// when
 		Throwable thrown = catchThrowable(() -> parameterService.uploadParameters(PARAMETER_NAME, PARAMETER_USER, PARAMETER_VALID_FROM, parameters, uploadMode));
@@ -142,7 +140,7 @@ public class ParameterServiceTest {
 				"        height: \"hello\"" +
 				"    }" +
 				"]";
-		final UploadService.UploadMode uploadMode = UploadService.UploadMode.INSERT_NEW;
+		final UploadService.UploadMode uploadMode = UploadService.UploadMode.INSERT;
 
 		// when
 		Throwable thrown = catchThrowable(() -> parameterService.uploadParameters(PARAMETER_NAME, PARAMETER_USER, PARAMETER_VALID_FROM, invalidParameters, uploadMode));

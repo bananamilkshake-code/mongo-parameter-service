@@ -43,7 +43,7 @@ public class ParameterController {
 										   @RequestParam String user,
 										   @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate validFrom,
 										   @RequestBody String values,
-										   @RequestParam(required = false, defaultValue = "INSERT_NEW") UploadMode uploadMode) {
+										   @RequestParam(required = false, defaultValue = "INSERT") UploadMode uploadMode) {
 		return parameterResponseAssembler.uploadParameters(type, user, validFrom, values, uploadMode);
 	}
 }

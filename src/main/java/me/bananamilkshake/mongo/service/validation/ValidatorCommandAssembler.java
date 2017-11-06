@@ -3,7 +3,7 @@ package me.bananamilkshake.mongo.service.validation;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
-import me.bananamilkshake.mongo.domain.ParameterValidator;
+import me.bananamilkshake.mongo.domain.validation.ParameterValidator;
 import me.bananamilkshake.mongo.service.values.ValuesPreparationService;
 import org.bson.BasicBSONObject;
 import org.springframework.beans.factory.annotation.Autowired;

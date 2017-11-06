@@ -8,7 +8,7 @@ import static com.fasterxml.jackson.annotation.JsonInclude.Include.*;
 
 @Builder
 @JsonInclude(NON_NULL)
-public class FieldValidator {
+class FieldValidator {
 
 	@JsonProperty(value = "$exists")
 	private String exists;

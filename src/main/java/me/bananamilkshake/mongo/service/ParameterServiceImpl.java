@@ -1,7 +1,9 @@
 package me.bananamilkshake.mongo.service;
 
 import com.mongodb.AggregationOutput;
+import com.mongodb.BasicDBList;
 import com.mongodb.DBObject;
+import com.mongodb.util.JSON;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import me.bananamilkshake.mongo.exception.CollectionAlreadyExistsException;
@@ -78,12 +80,16 @@ public class ParameterServiceImpl implements ParameterService {
 								 String values,
 								 UploadMode uploadMode) {
 		validateParameterType(type);
-		uploadMode.upload(uploadService, type, user, validFrom, values);
+		uploadMode.upload(uploadService, type, user, validFrom, prepareValues(values));
 	}
 
 	private void validateParameterType(String type) {
 		if (!mongoTemplate.collectionExists(type)) {
 			throw new NoSuchParameterExistsException();
 		}
+	}
+
+	private List<Object> prepareValues(String values) {
+		return (BasicDBList) JSON.parse(values);
 	}
 }
