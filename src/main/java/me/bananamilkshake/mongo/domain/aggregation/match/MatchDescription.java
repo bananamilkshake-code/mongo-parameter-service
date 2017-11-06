@@ -4,18 +4,18 @@ import lombok.Getter;
 import me.bananamilkshake.mongo.domain.ParameterBase;
 import me.bananamilkshake.mongo.domain.aggregation.match.field.ComparableMatchField;
 import me.bananamilkshake.mongo.domain.aggregation.match.field.EqualMatchField;
-import me.bananamilkshake.mongo.domain.aggregation.match.field.LocalDateField;
+import me.bananamilkshake.mongo.domain.aggregation.match.field.DateField;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Getter
 public class MatchDescription implements ParameterBase {
 
 	private EqualMatchField<String> user;
-	private ComparableMatchField<LocalDateField> validFrom;
+	private ComparableMatchField<DateField> validFrom;
 
-	public MatchDescription(String user, LocalDate date) {
+	public MatchDescription(String user, LocalDateTime date) {
 		this.user = new EqualMatchField<>(user);
-		this.validFrom = new ComparableMatchField<LocalDateField>().lte(new LocalDateField(date));
+		this.validFrom = new ComparableMatchField<DateField>().lte(new DateField(date));
 	}
 }

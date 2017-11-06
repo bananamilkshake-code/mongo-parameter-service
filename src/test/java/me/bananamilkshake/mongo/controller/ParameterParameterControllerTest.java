@@ -13,8 +13,9 @@ import org.springframework.http.ResponseEntity;
 
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.time.LocalDate;
-import java.time.Month;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Matchers.eq;
@@ -44,7 +45,7 @@ public class ParameterParameterControllerTest {
 		final String parameterName = "Flowers";
 		final String parameters = "{ name: \"rose\", colour: \"yellow\" }";
 		final String user = "BestFlowersInc";
-		final LocalDate parameterDate = LocalDate.of(2017, Month.SEPTEMBER, 24);
+		final ZonedDateTime parameterDate = ZonedDateTime.of(LocalDateTime.of(2017, 10, 7, 0, 0), ZoneId.of("UTC"));
 
 		when(parameterResponseAssembler.getParameters(eq(parameterName), user, parameterDate)).thenReturn(ResponseEntity.ok(parameters));
 
@@ -79,10 +80,10 @@ public class ParameterParameterControllerTest {
 		// given
 		final String parameterName = "Flowers";
 		final String user = "Rose";
-		final LocalDate validFrom = LocalDate.of(2017, 11, 3);
+		final ZonedDateTime validFrom = ZonedDateTime.of(LocalDateTime.of(2017, 10, 7, 0, 0), ZoneId.of("UTC"));
 
 		final String parameters = "[{ colour: \"yellow\" }]";
-		UploadService.UploadMode uploadMode = UploadService.UploadMode.INSERT_NEW;
+		UploadService.UploadMode uploadMode = UploadService.UploadMode.INSERT;
 
 		when(parameterResponseAssembler.uploadParameters(eq(parameterName), user, validFrom, eq(parameters), uploadMode)).thenReturn(ResponseEntity.accepted().build());
 

@@ -10,7 +10,7 @@ import me.bananamilkshake.mongo.domain.aggregation.match.MatchDescription;
 import me.bananamilkshake.mongo.domain.aggregation.sort.SortDescription;
 import org.springframework.stereotype.Component;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -20,14 +20,14 @@ public class AggregationFilterCreator {
 
 	private final ObjectMapper objectMapper;
 
-	public List<DBObject> create(String user, LocalDate date) {
+	public List<DBObject> create(String user, LocalDateTime date) {
 		return buildAggregationFilter(user, date)
 				.stream()
 				.map(this::convertFilterPart)
 				.collect(Collectors.toList());
 	}
 
-	private ParameterAggregationFilter buildAggregationFilter(String user, LocalDate date) {
+	private ParameterAggregationFilter buildAggregationFilter(String user, LocalDateTime date) {
 		return new ParameterAggregationFilter()
 				.setMatch(new MatchDescription(user, date))
 				.setSort(SortDescription.builder().validFrom(-1).build())

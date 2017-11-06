@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component;
 
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.time.LocalDate;
+import java.time.ZonedDateTime;
 
 import static java.text.MessageFormat.format;
 
@@ -20,7 +20,7 @@ public class ParameterResponseAssembler {
 
 	private final ParameterService parameterService;
 
-	public ResponseEntity getParameters(String name, String user, LocalDate date) {
+	public ResponseEntity getParameters(String name, String user, ZonedDateTime date) {
 		final String parameters = parameterService.getParameters(name, user, date);
 		return ResponseEntity.ok(parameters);
 	}
@@ -32,7 +32,7 @@ public class ParameterResponseAssembler {
 
 	public ResponseEntity uploadParameters(String type,
 										   String user,
-										   LocalDate validFrom,
+										   ZonedDateTime validFrom,
 										   String values,
 										   UploadMode uploadMode) {
 		parameterService.uploadParameters(type, user, validFrom, values, uploadMode);

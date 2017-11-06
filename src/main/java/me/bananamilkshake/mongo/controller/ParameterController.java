@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.time.LocalDate;
+import java.time.ZonedDateTime;
 
 @RestController
 @RequestMapping("/parameter/{type}")
@@ -27,7 +27,7 @@ public class ParameterController {
 	@GetMapping(produces = {MediaType.APPLICATION_JSON_VALUE})
 	public ResponseEntity getParameters(@PathVariable String type,
 										@RequestParam String user,
-										@RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date) {
+										@RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) ZonedDateTime date) {
 		return parameterResponseAssembler.getParameters(type, user, date);
 	}
 
@@ -41,7 +41,7 @@ public class ParameterController {
 	@PostMapping(path = "/upload", consumes = {MediaType.APPLICATION_JSON_VALUE})
 	public ResponseEntity uploadParameters(@PathVariable String type,
 										   @RequestParam String user,
-										   @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate validFrom,
+										   @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) ZonedDateTime validFrom,
 										   @RequestBody String values,
 										   @RequestParam(required = false, defaultValue = "INSERT") UploadMode uploadMode) {
 		return parameterResponseAssembler.uploadParameters(type, user, validFrom, values, uploadMode);

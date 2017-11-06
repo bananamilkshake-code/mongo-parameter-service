@@ -5,7 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import me.bananamilkshake.mongo.domain.aggregation.match.MatchDescription;
 import org.junit.Test;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -15,7 +15,7 @@ public class MatchDescriptionTest {
 	public void shouldBeSerializedToJson() throws JsonProcessingException {
 		// given
 		final String user = "RO";
-		final LocalDate date = LocalDate.of(2017, 10, 7);
+		final LocalDateTime date = LocalDateTime.of(2017, 10, 7, 0, 0);
 		final ObjectMapper objectMapper = new ObjectMapper();
 
 		// when

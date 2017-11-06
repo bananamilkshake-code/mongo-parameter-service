@@ -5,7 +5,7 @@ import com.mongodb.DBObject;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -24,7 +24,7 @@ public class QueryCreatorTest {
 	public void shouldCreateCorrectFilterOnUserAndDate() {
 		// given
 		final String user = "RO";
-		final LocalDate date = LocalDate.of(2017, 10, 7);
+		final LocalDateTime date = LocalDateTime.of(2017, 10, 7, 0, 0);
 
 		// when
 		final List<DBObject> result = aggregationFilterCreator.create(user, date);

@@ -6,6 +6,7 @@ import com.mongodb.DBObject;
 import com.mongodb.util.JSON;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import me.bananamilkshake.mongo.domain.Parameter;
 import me.bananamilkshake.mongo.exception.CollectionAlreadyExistsException;
 import me.bananamilkshake.mongo.exception.NoSuchParameterExistsException;
 import me.bananamilkshake.mongo.service.UploadService.UploadMode;
@@ -17,7 +18,9 @@ import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -44,10 +47,10 @@ public class ParameterServiceImpl implements ParameterService {
 	}
 
 	@Override
-	public String getParameters(String type, String user, LocalDate date) {
+	public String getParameters(String type, String user, ZonedDateTime date) {
 		validateParameterType(type);
 		return mongoTemplate.execute(type, collection -> {
-			List<DBObject> aggregationFilter = aggregationFilterCreator.create(user, date);
+			List<DBObject> aggregationFilter = aggregationFilterCreator.create(user, convertToUtc(date));
 			AggregationOutput aggregationOutput = collection.aggregate(aggregationFilter);
 			return StreamSupport
 					.stream(aggregationOutput.results().spliterator(), false)
@@ -76,11 +79,11 @@ public class ParameterServiceImpl implements ParameterService {
 	@Override
 	public void uploadParameters(String type,
 								 String user,
-								 LocalDate validFrom,
+								 ZonedDateTime validFrom,
 								 String values,
 								 UploadMode uploadMode) {
 		validateParameterType(type);
-		uploadMode.upload(uploadService, type, user, validFrom, prepareValues(values));
+		uploadMode.upload(uploadService, type, new Parameter<>(user, convertToUtc(validFrom), prepareValues(values)));
 	}
 
 	private void validateParameterType(String type) {
@@ -91,5 +94,9 @@ public class ParameterServiceImpl implements ParameterService {
 
 	private List<Object> prepareValues(String values) {
 		return (BasicDBList) JSON.parse(values);
+	}
+
+	private LocalDateTime convertToUtc(ZonedDateTime zonedDateTime) {
+		return zonedDateTime.withZoneSameInstant(ZoneId.of("UTC")).toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime();
 	}
 }

@@ -23,7 +23,9 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.mongodb.core.MongoTemplate;
 
 import java.io.IOException;
-import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 
 import static java.util.Objects.nonNull;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -39,7 +41,7 @@ public class ParameterServiceTest {
 
 	private static final String PARAMETER_NAME = "someParameter";
 	private static final String PARAMETER_USER = "someUser";
-	private static final LocalDate PARAMETER_VALID_FROM = LocalDate.of(2017, 11, 3);
+	private static final ZonedDateTime PARAMETER_VALID_FROM = ZonedDateTime.of(LocalDateTime.of(2017, 10, 7, 0, 0), ZoneId.of("UTC"));
 
 	private static MongodProcess mongoProcess;
 	private static MongoClient mongoClient;
