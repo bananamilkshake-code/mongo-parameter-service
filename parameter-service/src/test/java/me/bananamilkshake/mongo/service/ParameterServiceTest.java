@@ -93,7 +93,7 @@ public class ParameterServiceTest {
 				"}");
 		assertThat(commandResult.ok()).isTrue().as("Failed to setup parameter validation");
 
-		parameterService = new ParameterServiceImpl(mongoTemplate, aggregationFilterCreator, validationSetupService, indexSetupService, uploadService);
+		parameterService = new ParameterService(mongoTemplate, aggregationFilterCreator, validationSetupService, indexSetupService, uploadService);
 	}
 
 	@After

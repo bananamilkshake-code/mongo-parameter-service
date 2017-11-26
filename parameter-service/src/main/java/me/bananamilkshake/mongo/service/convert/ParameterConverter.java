@@ -16,4 +16,3 @@ public class ParameterConverter {
 		return mapperFacade.map(parameter, ParameterDto.class);
 	}
 }
-
