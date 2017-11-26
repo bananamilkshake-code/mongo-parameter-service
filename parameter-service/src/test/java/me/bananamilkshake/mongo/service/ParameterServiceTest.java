@@ -78,12 +78,12 @@ public class ParameterServiceTest {
 				"    collMod: \"" + PARAMETER_NAME + "\"," +
 				"    validator: {" +
 				"        {" +
-				"            width: {" +
+				"            \"width:\" {" +
 				"                $exists: \"true\"," +
 				"                $type: \"number\"," +
 				"                $gte: 0" +
 				"            }," +
-				"            height: {" +
+				"            \"height\": {" +
 				"                $exists: \"true\"," +
 				"                $type: \"number\"," +
 				"                $gte: 0" +

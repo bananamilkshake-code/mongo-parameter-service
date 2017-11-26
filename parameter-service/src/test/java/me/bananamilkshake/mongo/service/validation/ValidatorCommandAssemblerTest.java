@@ -2,6 +2,7 @@ package me.bananamilkshake.mongo.service.validation;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.mongodb.util.JSON;
 import me.bananamilkshake.mongo.service.values.ValuesPreparationService;
 import org.junit.Before;
 import org.junit.Test;
@@ -22,8 +23,6 @@ public class ValidatorCommandAssemblerTest {
 	@Mock
 	private ValuesPreparationService valuesPreparationService;
 
-	private ValidatorCommandAssembler validatorCommandAssembler;
-
 	private static final String STANDARD_VALIDATION =
 			"{" +
 			"    user: {" +
@@ -33,10 +32,6 @@ public class ValidatorCommandAssemblerTest {
 			"    validFrom: {" +
 			"        $exists: \"true\"," +
 			"        $type: \"date\"" +
-			"    }," +
-			"    validTo: {" +
-			"        $exists: \"true\"," +
-			"        $height: \"date\"" +
 			"    }" +
 			"}";
 
@@ -44,8 +39,7 @@ public class ValidatorCommandAssemblerTest {
 	public void setup() throws JsonProcessingException {
 		when(objectMapper.writeValueAsString(any())).thenReturn(STANDARD_VALIDATION);
 
-		validatorCommandAssembler = new ValidatorCommandAssembler(valuesPreparationService);
-		validatorCommandAssembler.setObjectMapper(objectMapper);
+		when(valuesPreparationService.prepare(any())).thenAnswer(invocation -> JSON.parse(invocation.getArgumentAt(0, String.class)));
 	}
 
 	@Test
@@ -55,7 +49,7 @@ public class ValidatorCommandAssemblerTest {
 		final String name = "parameter";
 
 		// then
-		final String result = validatorCommandAssembler.create(name, null);
+		final String result = validatorCommandAssembler().create(name, null);
 
 		// when
 		final String expected = removeSpaces("{collMod:\"parameter\",validator:{$and:[" + STANDARD_VALIDATION + "]}}");
@@ -67,14 +61,20 @@ public class ValidatorCommandAssemblerTest {
 
 		// given
 		final String name = "parameter";
-		final String validationDescription = "{ name: { $exists: \"true\" } }";
+		final String validationDescription = "{ \"name\": { \"$exists\": \"true\" } }";
 
 		// then
-		final String result = validatorCommandAssembler.create(name, validationDescription);
+		final String result = validatorCommandAssembler().create(name, validationDescription);
 
 		// when
 		final String expected = removeSpaces("{collMod:\"parameter\",validator:{$and:[" + STANDARD_VALIDATION + "," + validationDescription + "]}}");
 		assertThat(removeSpaces(result)).isEqualTo(expected);
+	}
+
+	private ValidatorCommandAssembler validatorCommandAssembler() {
+		ValidatorCommandAssembler validatorCommandAssembler = new ValidatorCommandAssembler(valuesPreparationService);
+		validatorCommandAssembler.setObjectMapper(objectMapper);
+		return validatorCommandAssembler;
 	}
 
 	private String removeSpaces(String string) {
