@@ -14,14 +14,14 @@ import static java.text.MessageFormat.format;
 @AllArgsConstructor
 public class DateField {
 
-	private static final SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssz");
+	private static final SimpleDateFormat FORMAT = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssz");
 
 	private final LocalDateTime date;
 
 	@JsonValue
 	@JsonRawValue
 	public String getValue() {
-		return format("ISODate(\"{0}\")", format.format(convertToDate()));
+		return format("ISODate(\"{0}\")", FORMAT.format(convertToDate()));
 	}
 
 	private Date convertToDate() {

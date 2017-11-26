@@ -5,7 +5,10 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import me.bananamilkshake.mongo.domain.aggregation.match.MatchDescription;
 import org.junit.Test;
 
+import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
+import java.time.ZoneOffset;
+import java.util.Date;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -13,16 +16,21 @@ public class MatchDescriptionTest {
 
 	@Test
 	public void shouldBeSerializedToJson() throws JsonProcessingException {
+
 		// given
-		final String user = "RO";
-		final LocalDateTime date = LocalDateTime.of(2017, 10, 7, 0, 0);
-		final ObjectMapper objectMapper = new ObjectMapper();
+		String user = "RO";
+		LocalDateTime date = LocalDateTime.of(2017, 10, 7, 0, 0);
 
 		// when
-		final String serialized = objectMapper.writeValueAsString(new MatchDescription(user, date));
+		String serialized = new ObjectMapper().writeValueAsString(new MatchDescription(user, date));
 
 		// then
-		final String expected = "{ \"user\" : \"RO\", \"validFrom\" : { \"$lte\" : ISODate(\"2017-10-07\" ) }, \"validTo\" : { \"$gte\" : ISODate(\"2017-10-07\" ) } }";
+		String formattedDate = convertToString(date);
+		String expected = "{\"user\":{\"$eq\":\"RO\"},\"validFrom\":{\"$lte\":ISODate(\"" + formattedDate + "\")}}";
 		assertThat(serialized).isEqualToIgnoringWhitespace(expected);
+	}
+
+	private String convertToString(LocalDateTime date) {
+		return new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssz").format(Date.from(date.toInstant(ZoneOffset.UTC)));
 	}
 }
