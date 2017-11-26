@@ -9,6 +9,7 @@ import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 
+import static java.util.Objects.isNull;
 import static java.util.Objects.nonNull;
 
 @Slf4j
@@ -22,6 +23,10 @@ class ParameterCreationDescriptionParser {
 	private final ObjectMapper objectMapper;
 
 	ParameterCreationDescription parse(String value) {
+		if (isNull(value)) {
+			return new ParameterCreationDescription();
+		}
+
 		JsonNode jsonNode;
 		try {
 			jsonNode = objectMapper.reader().readTree(value);

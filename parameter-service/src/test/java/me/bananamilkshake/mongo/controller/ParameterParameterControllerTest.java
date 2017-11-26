@@ -1,9 +1,10 @@
 package me.bananamilkshake.mongo.controller;
 
+import com.google.common.collect.ImmutableMap;
 import lombok.extern.slf4j.Slf4j;
 import me.bananamilkshake.mongo.assembler.ParameterResponseAssembler;
+import me.bananamilkshake.mongo.dto.ParameterDto;
 import me.bananamilkshake.mongo.service.UploadService;
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
@@ -16,8 +17,11 @@ import java.net.URISyntaxException;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
+import java.util.Map;
 
+import static com.google.common.collect.Lists.newArrayList;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.when;
 
@@ -25,36 +29,28 @@ import static org.mockito.Mockito.when;
 @RunWith(MockitoJUnitRunner.class)
 public class ParameterParameterControllerTest {
 
-	private ParameterController parameterController;
-
 	@Mock
 	private ParameterCreationDescriptionParser parameterCreationDescriptionParser;
 
 	@Mock
 	private ParameterResponseAssembler parameterResponseAssembler;
 
-	@Before
-	public void before() {
-		parameterController = new ParameterController(parameterCreationDescriptionParser, parameterResponseAssembler);
-	}
-
 	@Test
 	public void shouldReturnParametersForExistingType() {
 
 		// given
 		final String parameterName = "Flowers";
-		final String parameters = "{ name: \"rose\", colour: \"yellow\" }";
 		final String user = "BestFlowersInc";
 		final ZonedDateTime parameterDate = ZonedDateTime.of(LocalDateTime.of(2017, 10, 7, 0, 0), ZoneId.of("UTC"));
 
-		when(parameterResponseAssembler.getParameters(eq(parameterName), user, parameterDate)).thenReturn(ResponseEntity.ok(parameters));
+		ParameterDto parameter = givenParameterIsPresented(parameterName, user, parameterDate);
 
 		// when
-		final ResponseEntity result = parameterController.getParameters(parameterName, user, parameterDate);
+		final ResponseEntity result = parameterController().getParameters(parameterName, user, parameterDate);
 
 		// then
 		assertThat(result.getStatusCode()).isEqualTo(HttpStatus.OK);
-		assertThat(result.getBody()).isEqualTo(parameters);
+		assertThat(result.getBody()).isEqualToComparingFieldByField(parameter);
 	}
 
 	@Test
@@ -64,10 +60,10 @@ public class ParameterParameterControllerTest {
 		final String newParameterName = "newParameter";
 		final String pathToParameter = "/parameter/" + newParameterName;
 
-		when(parameterResponseAssembler.createParameter(eq(newParameterName), eq(null), eq(null))).thenReturn(ResponseEntity.created(uri(pathToParameter)).build());
+		givenValidParameterDescription(newParameterName, pathToParameter);
 
 		// when
-		final ResponseEntity result = parameterController.createParameter(newParameterName, null);
+		final ResponseEntity result = parameterController().createParameter(newParameterName, null);
 
 		// then
 		assertThat(result.getStatusCode()).isEqualTo(HttpStatus.CREATED);
@@ -85,14 +81,44 @@ public class ParameterParameterControllerTest {
 		final String parameters = "[{ colour: \"yellow\" }]";
 		UploadService.UploadMode uploadMode = UploadService.UploadMode.INSERT;
 
-		when(parameterResponseAssembler.uploadParameters(eq(parameterName), user, validFrom, eq(parameters), uploadMode)).thenReturn(ResponseEntity.accepted().build());
+		givenValidParameterValuesToUpload();
 
 		// when
-		final ResponseEntity result = parameterController.uploadParameters(parameterName, user, validFrom, parameters, uploadMode);
+		final ResponseEntity result = parameterController().uploadParameters(parameterName, user, validFrom, parameters, uploadMode);
 
 		// then
 		assertThat(result.getStatusCode()).isEqualTo(HttpStatus.ACCEPTED);
 		assertThat(result.getBody()).isNull();
+	}
+
+	private ParameterController parameterController() {
+		return new ParameterController(parameterCreationDescriptionParser, parameterResponseAssembler);
+	}
+
+	private ParameterDto givenParameterIsPresented(String parameterName, String user, ZonedDateTime parameterDate) {
+		Map<String, Object> values = ImmutableMap.<String, Object>builder()
+				.put("value", 1)
+				.build();
+
+		final ParameterDto parameter = new ParameterDto(user, LocalDateTime.of(2017, 1, 1, 0, 0), newArrayList(values));
+
+		when(parameterResponseAssembler.getParameters(eq(parameterName), eq(user), eq(parameterDate)))
+				.thenReturn(ResponseEntity.ok(parameter));
+
+		return parameter;
+	}
+
+	private void givenValidParameterDescription(String parameterName, String expectedParameterUri) {
+		when(parameterCreationDescriptionParser.parse(any()))
+				.thenReturn(new ParameterCreationDescription());
+
+		when(parameterResponseAssembler.createParameter(eq(parameterName), eq(null), eq(null)))
+				.thenReturn(ResponseEntity.created(uri(expectedParameterUri)).build());
+	}
+
+	private void givenValidParameterValuesToUpload() {
+		when(parameterResponseAssembler.uploadParameters(any(), any(), any(), any(), any()))
+				.thenReturn(ResponseEntity.accepted().build());
 	}
 
 	private URI uri(String path) {

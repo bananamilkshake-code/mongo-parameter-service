@@ -2,6 +2,7 @@ package me.bananamilkshake.mongo.controller;
 
 import lombok.AllArgsConstructor;
 import me.bananamilkshake.mongo.assembler.ParameterResponseAssembler;
+import me.bananamilkshake.mongo.dto.ParameterDto;
 import me.bananamilkshake.mongo.service.UploadService.UploadMode;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.MediaType;
@@ -25,9 +26,9 @@ public class ParameterController {
 	private final ParameterResponseAssembler parameterResponseAssembler;
 
 	@GetMapping(produces = {MediaType.APPLICATION_JSON_VALUE})
-	public ResponseEntity getParameters(@PathVariable String type,
-										@RequestParam String user,
-										@RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) ZonedDateTime date) {
+	public ResponseEntity<ParameterDto> getParameters(@PathVariable String type,
+													  @RequestParam String user,
+													  @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) ZonedDateTime date) {
 		return parameterResponseAssembler.getParameters(type, user, date);
 	}
 

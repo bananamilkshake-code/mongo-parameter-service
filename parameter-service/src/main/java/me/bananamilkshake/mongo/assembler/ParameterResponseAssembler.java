@@ -2,8 +2,11 @@ package me.bananamilkshake.mongo.assembler;
 
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import me.bananamilkshake.mongo.domain.Parameter;
+import me.bananamilkshake.mongo.dto.ParameterDto;
 import me.bananamilkshake.mongo.service.ParameterService;
 import me.bananamilkshake.mongo.service.UploadService.UploadMode;
+import me.bananamilkshake.mongo.service.convert.ParameterConverter;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 
@@ -19,10 +22,11 @@ import static java.text.MessageFormat.format;
 public class ParameterResponseAssembler {
 
 	private final ParameterService parameterService;
+	private final ParameterConverter parameterConverter;
 
-	public ResponseEntity getParameters(String name, String user, ZonedDateTime date) {
-		final String parameters = parameterService.getParameters(name, user, date);
-		return ResponseEntity.ok(parameters);
+	public ResponseEntity<ParameterDto> getParameters(String name, String user, ZonedDateTime date) {
+		Parameter parameter = parameterService.getParameters(name, user, date);
+		return ResponseEntity.ok(parameterConverter.convert(parameter));
 	}
 
 	public ResponseEntity createParameter(String type, String validation, String index) {

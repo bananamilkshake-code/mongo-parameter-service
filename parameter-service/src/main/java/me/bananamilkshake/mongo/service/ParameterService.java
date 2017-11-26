@@ -1,15 +1,13 @@
 package me.bananamilkshake.mongo.service;
 
+import me.bananamilkshake.mongo.domain.Parameter;
 import me.bananamilkshake.mongo.service.UploadService.UploadMode;
 
 import java.time.ZonedDateTime;
-import java.util.Set;
 
 public interface ParameterService {
 
-	Set<String> getTypes();
-
-	String getParameters(String type, String user, ZonedDateTime date);
+	Parameter getParameters(String type, String user, ZonedDateTime date);
 
 	void createParameter(String parameterMeta, String validation, String index);
 

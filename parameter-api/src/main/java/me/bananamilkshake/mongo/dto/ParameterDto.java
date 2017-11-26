@@ -1,4 +1,4 @@
-package me.bananamilkshake.mongo.domain;
+package me.bananamilkshake.mongo.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -11,7 +11,7 @@ import java.util.Map;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class Parameter implements ParameterBase {
+public class ParameterDto {
 
 	private String user;
 	private LocalDateTime validFrom;

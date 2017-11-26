@@ -9,20 +9,20 @@ public interface UploadService {
 	enum UploadMode {
 		INSERT {
 			@Override
-			public void upload(UploadService uploadService, String type, Parameter<Object> parameter) {
+			public void upload(UploadService uploadService, String type, Parameter parameter) {
 				uploadService.insert(type, parameter);
 			}
 		},
 		REPLACE {
 			@Override
-			public void upload(UploadService uploadService, String type, Parameter<Object> parameter) {
+			public void upload(UploadService uploadService, String type, Parameter parameter) {
 				uploadService.replace(type, parameter);
 			}
 		};
 
-		public abstract void upload(UploadService uploadService, String type, Parameter<Object> parameter);
+		public abstract void upload(UploadService uploadService, String type, Parameter parameter);
 	}
 
-	void insert(String type, Parameter<Object> parameter);
-	void replace(String type, Parameter<Object> parameter);
+	void insert(String type, Parameter parameter);
+	void replace(String type, Parameter parameter);
 }
