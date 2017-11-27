@@ -1,21 +1,18 @@
 package me.bananamilkshake.mongo.service;
 
+import me.bananamilkshake.mongo.domain.Parameter;
 import me.bananamilkshake.mongo.service.UploadService.UploadMode;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
-import org.springframework.dao.DataIntegrityViolationException;
 
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.catchThrowable;
 import static org.mockito.Matchers.eq;
-import static org.mockito.Mockito.doNothing;
-import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.*;
 
 @RunWith(MockitoJUnitRunner.class)
 public class ParameterServiceTest {
@@ -30,64 +27,83 @@ public class ParameterServiceTest {
 	private UploadService uploadService;
 
 	@Test
-	public void shouldAcceptValidParameter() {
+	public void shouldCallAggregationServiceToGetParameters() {
 
 		// given
 		String name = "someParameter";
 		String user = "someUser";
-		ZonedDateTime validFrom = ZonedDateTime.of(LocalDateTime.of(2017, 10, 7, 0, 0), ZoneId.of("UTC"));
-		String parameters =
-				"[" +
-				"    {" +
-				"        width: -1," +
-				"        height: \"hello\"" +
-				"    }" +
-				"]";
-		UploadMode uploadMode = UploadMode.INSERT;
+		ZonedDateTime date = ZonedDateTime.of(LocalDateTime.of(2017, 10, 7, 0, 0), ZoneId.of("UTC"));
 
-		givenParametersAreValid(name, user, validFrom, parameters, uploadMode);
+		givenAggregationServiceExpectsCall(name, user, date);
 
 		// when
-		Throwable thrown = catchThrowable(() -> parameterService().uploadParameters(name, user, validFrom, parameters, uploadMode));
+		parameterService().getParameters(name, user, date);
 
 		// then
-		assertThat(thrown).isNull();
+		thenAggregationServiceCalled(name, user, date);
 	}
 
 	@Test
-	public void shouldNotUploadInvalidParameters() {
+	public void shouldCallCreatorServiceToCreateParameter() {
+
+		// given
+		String name = "someParameter";
+		String validation = "Some validation description";
+		String index = "Some index description";
+
+		givenCreatorServiceExpectsCall(name, validation, index);
+
+		// when
+		parameterService().createParameter(name, validation, index);
+
+		// then
+		thenCreatorServiceCalled(name, validation, index);
+	}
+
+	@Test
+	public void shouldCallUploadServiceToUploadParameters() {
 
 		// given
 		String name = "someParameter";
 		String user = "someUser";
 		ZonedDateTime validFrom = ZonedDateTime.of(LocalDateTime.of(2017, 10, 7, 0, 0), ZoneId.of("UTC"));
-		String invalidParameters =
-				"[" +
-				"    {" +
-				"        height: \"hello\"" +
-				"    }" +
-				"]";
+		String parameters = "Some parameters descriptions";
 		UploadMode uploadMode = UploadMode.INSERT;
 
-		givenParametersAreInvalid(name, user, validFrom, invalidParameters, uploadMode);
+		givenUploadServiceExpectsCall(name, user, validFrom, parameters, uploadMode);
 
 		// when
-		Throwable thrown = catchThrowable(() -> parameterService().uploadParameters(name, user, validFrom, invalidParameters, uploadMode));
+		parameterService().uploadParameters(name, user, validFrom, parameters, uploadMode);
 
 		// then
-		assertThat(thrown).isInstanceOf(DataIntegrityViolationException.class);
-	}
-
-	private void givenParametersAreInvalid(String name, String user, ZonedDateTime validFrom, String parameters, UploadMode uploadMode) {
-		doThrow(new DataIntegrityViolationException("Some exception"))
-				.when(uploadService).upload(eq(name), eq(user), eq(validFrom), eq(parameters), eq(uploadMode));
+		thenUploadServiceCalled(name, user, validFrom, parameters, uploadMode);
 	}
 
 	private ParameterService parameterService() {
 		return new ParameterService(aggregationService, creatorService, uploadService);
 	}
 
-	private void givenParametersAreValid(String name, String user, ZonedDateTime validFrom, String parameters, UploadMode uploadMode) {
+	private void givenAggregationServiceExpectsCall(String name, String user, ZonedDateTime date) {
+		doReturn(new Parameter()).when(aggregationService).aggregate(eq(name), eq(user), eq(date));
+	}
+
+	private void thenAggregationServiceCalled(String name, String user, ZonedDateTime date) {
+		verify(aggregationService, times(1)).aggregate(eq(name), eq(user), eq(date));
+	}
+
+	private void givenCreatorServiceExpectsCall(String name, String validation, String index) {
+		doNothing().when(creatorService).create(eq(name), eq(validation), eq(index));
+	}
+
+	private void thenCreatorServiceCalled(String name, String validation, String index) {
+		verify(creatorService, times(1)).create(eq(name), eq(validation), eq(index));
+	}
+
+	private void thenUploadServiceCalled(String name, String user, ZonedDateTime validFrom, String parameters, UploadMode uploadMode) {
+		verify(uploadService, times(1)).upload(eq(name), eq(user), eq(validFrom), eq(parameters), eq(uploadMode));
+	}
+
+	private void givenUploadServiceExpectsCall(String name, String user, ZonedDateTime validFrom, String parameters, UploadMode uploadMode) {
 		doNothing()
 				.when(uploadService).upload(eq(name), eq(user), eq(validFrom), eq(parameters), eq(uploadMode));
 	}
