@@ -4,6 +4,7 @@ import com.mongodb.AggregationOutput;
 import com.mongodb.DBObject;
 import lombok.AllArgsConstructor;
 import me.bananamilkshake.mongo.domain.Parameter;
+import me.bananamilkshake.mongo.exception.NoParameterWithSuchArgumentsExistsException;
 import me.bananamilkshake.mongo.exception.NoSuchParameterExistsException;
 import me.bananamilkshake.mongo.service.query.AggregationFilterCreator;
 import org.springframework.data.mongodb.core.MongoTemplate;
@@ -29,14 +30,14 @@ public class AggregationService {
 			DBObject dbObject = StreamSupport
 					.stream(aggregationOutput.results().spliterator(), false)
 					.findFirst()
-					.orElseThrow(NoSuchParameterExistsException::new);
+					.orElseThrow(NoParameterWithSuchArgumentsExistsException::new);
 			return mongoTemplate.getConverter().read(Parameter.class, dbObject);
 		});
 	}
 
 	private void validateParameterType(String type) {
 		if (!mongoTemplate.collectionExists(type)) {
-			throw new NoSuchParameterExistsException();
+			throw new NoSuchParameterExistsException(type);
 		}
 	}
 }

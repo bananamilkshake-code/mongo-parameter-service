@@ -52,7 +52,7 @@ public class UploadService {
 
 	private void validateParameterType(String type) {
 		if (!mongoTemplate.collectionExists(type)) {
-			throw new NoSuchParameterExistsException();
+			throw new NoSuchParameterExistsException(type);
 		}
 	}
 
