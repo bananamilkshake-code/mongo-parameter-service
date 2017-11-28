@@ -13,6 +13,7 @@ public class JacksonConfiguration {
 	public ObjectMapper objectMapper() {
 		final ObjectMapper objectMapper = new ObjectMapper();
 		objectMapper.configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false);
+		objectMapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
 		objectMapper.registerModule(new JavaTimeModule());
 		return objectMapper;
 	}
