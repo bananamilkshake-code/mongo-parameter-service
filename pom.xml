@@ -19,5 +19,6 @@
 	<modules>
 		<module>parameter-api</module>
 		<module>parameter-service</module>
+		<module>parameter-parent</module>
 	</modules>
 </project> 
