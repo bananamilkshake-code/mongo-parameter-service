@@ -26,6 +26,9 @@ public class ParameterServiceTest {
 	@Mock
 	private UploadService uploadService;
 
+	@Mock
+	private ParameterCreationDescriptionParser parameterCreationDescriptionParser;
+
 	@Test
 	public void shouldCallAggregationServiceToGetParameters() {
 
@@ -48,13 +51,16 @@ public class ParameterServiceTest {
 
 		// given
 		String name = "someParameter";
+		String description = "Some description";
+
 		String validation = "Some validation description";
 		String index = "Some index description";
 
+		givenParameterCreationDescriptionParserWillParseDescriptionTo(description, validation, index);
 		givenCreatorServiceExpectsCall(name, validation, index);
 
 		// when
-		parameterService().createParameter(name, validation, index);
+		parameterService().createParameter(name, description);
 
 		// then
 		thenCreatorServiceCalled(name, validation, index);
@@ -80,7 +86,7 @@ public class ParameterServiceTest {
 	}
 
 	private ParameterService parameterService() {
-		return new ParameterService(aggregationService, creatorService, uploadService);
+		return new ParameterService(aggregationService, creatorService, uploadService, parameterCreationDescriptionParser);
 	}
 
 	private void givenAggregationServiceExpectsCall(String name, String user, ZonedDateTime date) {
@@ -89,6 +95,13 @@ public class ParameterServiceTest {
 
 	private void thenAggregationServiceCalled(String name, String user, ZonedDateTime date) {
 		verify(aggregationService, times(1)).aggregate(eq(name), eq(user), eq(date));
+	}
+
+	private void givenParameterCreationDescriptionParserWillParseDescriptionTo(String description,
+																			   String validation,
+																			   String index) {
+		when(parameterCreationDescriptionParser.parse(eq(description)))
+				.thenReturn(new ParameterCreationDescription(validation, index));
 	}
 
 	private void givenCreatorServiceExpectsCall(String name, String validation, String index) {

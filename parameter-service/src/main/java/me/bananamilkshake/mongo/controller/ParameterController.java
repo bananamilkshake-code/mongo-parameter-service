@@ -2,18 +2,14 @@ package me.bananamilkshake.mongo.controller;
 
 import lombok.AllArgsConstructor;
 import me.bananamilkshake.mongo.assembler.ParameterResponseAssembler;
+import me.bananamilkshake.mongo.domain.Parameter;
 import me.bananamilkshake.mongo.dto.ParameterDto;
+import me.bananamilkshake.mongo.service.ParameterService;
 import me.bananamilkshake.mongo.service.UploadService.UploadMode;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.time.ZonedDateTime;
 
@@ -22,21 +18,22 @@ import java.time.ZonedDateTime;
 @AllArgsConstructor
 public class ParameterController {
 
-	private final ParameterCreationDescriptionParser parameterCreationDescriptionParser;
+	private final ParameterService parameterService;
 	private final ParameterResponseAssembler parameterResponseAssembler;
 
 	@GetMapping(produces = {MediaType.APPLICATION_JSON_VALUE})
 	public ResponseEntity<ParameterDto> getParameters(@PathVariable String type,
 													  @RequestParam String user,
 													  @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) ZonedDateTime date) {
-		return parameterResponseAssembler.getParameters(type, user, date);
+		Parameter parameter = parameterService.getParameters(type, user, date);
+		return parameterResponseAssembler.assembleGetParameterResponse(parameter);
 	}
 
 	@PostMapping(consumes = {MediaType.APPLICATION_JSON_VALUE})
 	public ResponseEntity createParameter(@PathVariable String type,
 										  @RequestBody String descriptionValue) {
-		final ParameterCreationDescription description = parameterCreationDescriptionParser.parse(descriptionValue);
-		return parameterResponseAssembler.createParameter(type, description.getValidation(), description.getIndex());
+		parameterService.createParameter(type, descriptionValue);
+		return parameterResponseAssembler.assembleCreateParameterResponse(type);
 	}
 
 	@PostMapping(path = "/upload", consumes = {MediaType.APPLICATION_JSON_VALUE})
@@ -45,6 +42,7 @@ public class ParameterController {
 										   @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) ZonedDateTime validFrom,
 										   @RequestBody String values,
 										   @RequestParam(required = false, defaultValue = "INSERT") UploadMode uploadMode) {
-		return parameterResponseAssembler.uploadParameters(type, user, validFrom, values, uploadMode);
+		parameterService.uploadParameters(type, user, validFrom, values, uploadMode);
+		return parameterResponseAssembler.assembleUploadValuesResponse();
 	}
 }

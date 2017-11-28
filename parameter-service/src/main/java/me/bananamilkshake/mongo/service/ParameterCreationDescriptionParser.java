@@ -1,4 +1,4 @@
-package me.bananamilkshake.mongo.controller;
+package me.bananamilkshake.mongo.service;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;

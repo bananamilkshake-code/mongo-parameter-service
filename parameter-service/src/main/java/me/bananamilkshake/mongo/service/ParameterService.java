@@ -19,12 +19,15 @@ public class ParameterService {
 	private final CreatorService creatorService;
 	private final UploadService uploadService;
 
+	private final ParameterCreationDescriptionParser parameterCreationDescriptionParser;
+
 	public Parameter getParameters(String type, String user, ZonedDateTime date) {
 		return aggregationService.aggregate(type, user, date);
 	}
 
-	public void createParameter(String type, String validation, String index) {
-		creatorService.create(type, validation, index);
+	public void createParameter(String type, String descriptionValue) {
+		final ParameterCreationDescription description = parameterCreationDescriptionParser.parse(descriptionValue);
+		creatorService.create(type, description.getValidation(), description.getIndex());
 	}
 
 	public void uploadParameters(String type, String user, ZonedDateTime validFrom, String values, UploadMode uploadMode) {

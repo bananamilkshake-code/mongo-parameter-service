@@ -1,4 +1,4 @@
-package me.bananamilkshake.mongo.controller;
+package me.bananamilkshake.mongo.service;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
