@@ -121,7 +121,7 @@ public class IntegrationTest {
 	}
 
 	private String pathToParameter(String type) {
-		return "/parameter/" + type + "/";
+		return "/parameter/" + type;
 	}
 
 	private void givenParameterExists(String name, String validation) {
