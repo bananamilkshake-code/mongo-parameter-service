@@ -57,7 +57,7 @@ public class ParameterResponseAssemblerTest {
 		ResponseEntity responseEntity = parameterResponseAssembler().assembleCreateParameterResponse(type);
 
 		// then
-		assertThat(responseEntity.getBody()).isEqualTo("/parameter/Some_type");
+		assertThat(responseEntity.getHeaders().getLocation().getPath()).isEqualTo("/parameter/Some_type");
 	}
 
 	@Test
