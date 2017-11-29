@@ -7,6 +7,7 @@ import me.bananamilkshake.mongo.dto.ParameterDto;
 import me.bananamilkshake.mongo.service.ParameterService;
 import me.bananamilkshake.mongo.service.UploadService.UploadMode;
 import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -21,6 +22,7 @@ public class ParameterControllerImpl implements ParameterController {
 	private final ParameterResponseAssembler parameterResponseAssembler;
 
 	@Override
+	@GetMapping(path = "/{user}", produces = {MediaType.APPLICATION_JSON_VALUE})
 	public ResponseEntity<ParameterDto> getParameters(@PathVariable String type,
 													  @PathVariable String user,
 													  @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) ZonedDateTime date) {
@@ -29,6 +31,7 @@ public class ParameterControllerImpl implements ParameterController {
 	}
 
 	@Override
+	@PostMapping(consumes = {MediaType.APPLICATION_JSON_VALUE})
 	public ResponseEntity createParameter(@PathVariable String type,
 										  @RequestBody String descriptionValue) {
 		parameterService.createParameter(type, descriptionValue);
@@ -36,8 +39,9 @@ public class ParameterControllerImpl implements ParameterController {
 	}
 
 	@Override
+	@PostMapping(path = "/upload/{user}", consumes = {MediaType.APPLICATION_JSON_VALUE})
 	public ResponseEntity uploadValues(@PathVariable String type,
-									   @RequestParam String user,
+									   @PathVariable String user,
 									   @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) ZonedDateTime validFrom,
 									   @RequestBody String values,
 									   @RequestParam(required = false, defaultValue = "INSERT") UploadMode uploadMode) {
