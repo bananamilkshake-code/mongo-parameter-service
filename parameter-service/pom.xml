@@ -16,6 +16,10 @@
 
 	<name>parameter-service</name>
 
+	<properties>
+		<swagger.version>2.7.0</swagger.version>
+	</properties>
+
 	<dependencies>
 		<dependency>
 			<groupId>me.bananamilkshake</groupId>
@@ -61,6 +65,16 @@
 		<dependency>
 			<groupId>com.google.guava</groupId>
 			<artifactId>guava</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>io.springfox</groupId>
+			<artifactId>springfox-swagger2</artifactId>
+			<version>${swagger.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>io.springfox</groupId>
+			<artifactId>springfox-swagger-ui</artifactId>
+			<version>${swagger.version}</version>
 		</dependency>
 
 		<dependency>

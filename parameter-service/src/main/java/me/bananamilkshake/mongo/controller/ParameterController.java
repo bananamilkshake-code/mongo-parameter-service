@@ -21,9 +21,9 @@ public class ParameterController {
 	private final ParameterService parameterService;
 	private final ParameterResponseAssembler parameterResponseAssembler;
 
-	@GetMapping(produces = {MediaType.APPLICATION_JSON_VALUE})
+	@GetMapping(params = "/{user}", produces = {MediaType.APPLICATION_JSON_VALUE})
 	public ResponseEntity<ParameterDto> getParameters(@PathVariable String type,
-													  @RequestParam String user,
+													  @PathVariable String user,
 													  @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) ZonedDateTime date) {
 		Parameter parameter = parameterService.getParameters(type, user, date);
 		return parameterResponseAssembler.assembleGetParameterResponse(parameter);
