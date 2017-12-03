@@ -1,34 +1,51 @@
 package me.bananamilkshake.mongo.controller;
 
-import io.swagger.annotations.ApiResponse;
-import io.swagger.annotations.ApiResponses;
-import io.swagger.annotations.ResponseHeader;
+import lombok.AllArgsConstructor;
+import me.bananamilkshake.mongo.assembler.ParameterResponseAssembler;
+import me.bananamilkshake.mongo.domain.Parameter;
 import me.bananamilkshake.mongo.dto.ParameterDto;
-import me.bananamilkshake.mongo.service.UploadService;
+import me.bananamilkshake.mongo.service.ParameterService;
+import me.bananamilkshake.mongo.service.UploadService.UploadMode;
+import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
 import java.time.ZonedDateTime;
 
-public interface ParameterController {
+@RestController
+@RequestMapping("/parameter/{type}")
+@AllArgsConstructor
+public class ParameterController implements ParameterControllerApi {
 
-	@ApiResponses({
-			@ApiResponse(code = 200, message = "Aggregated parameters of `type` for `user` found for appropriate `date`"),
-			@ApiResponse(code = 204, message = "No values specified for `user` and `date` for parameter `type`"),
-			@ApiResponse(code = 404, message = "Parameter `type` does not exists")
-	})
-	ResponseEntity<ParameterDto> getParameters(String type, String user, ZonedDateTime date);
+	private final ParameterService parameterService;
+	private final ParameterResponseAssembler parameterResponseAssembler;
 
-	@ApiResponses({
-			@ApiResponse(code = 201, message = "Parameter created successfully", responseHeaders = {@ResponseHeader(name = "Location", description = "Path to parameter to get")}),
-			@ApiResponse(code = 400, message = "Description of index or validation is invalid"),
-			@ApiResponse(code = 400, message = "Parameters `type` already exists")
-	})
-	ResponseEntity createParameter(String type, String descriptionValue);
+	@Override
+	@GetMapping(path = "/{user}", produces = {MediaType.APPLICATION_JSON_VALUE})
+	public ResponseEntity<ParameterDto> getParameters(@PathVariable String type,
+													  @PathVariable String user,
+													  @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) ZonedDateTime date) {
+		Parameter parameter = parameterService.getParameters(type, user, date);
+		return parameterResponseAssembler.assembleGetParameterResponse(parameter);
+	}
 
-	@ApiResponses({
-			@ApiResponse(code = 202, message = "Values uploaded successfully"),
-			@ApiResponse(code = 404, message = "Parameter `type` does not exists"),
-			@ApiResponse(code = 400, message = "Values description cannot be parsed")
-	})
-	ResponseEntity uploadValues(String type, String user, ZonedDateTime validFrom, String values, UploadService.UploadMode uploadMode);
+	@Override
+	@PostMapping(consumes = {MediaType.APPLICATION_JSON_VALUE})
+	public ResponseEntity createParameter(@PathVariable String type,
+										  @RequestBody String descriptionValue) {
+		parameterService.createParameter(type, descriptionValue);
+		return parameterResponseAssembler.assembleCreateParameterResponse(type);
+	}
+
+	@Override
+	@PostMapping(path = "/{user}", consumes = {MediaType.APPLICATION_JSON_VALUE})
+	public ResponseEntity uploadValues(@PathVariable String type,
+									   @PathVariable String user,
+									   @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) ZonedDateTime validFrom,
+									   @RequestBody String values,
+									   @RequestParam(required = false, defaultValue = "INSERT") UploadMode uploadMode) {
+		parameterService.uploadParameters(type, user, validFrom, values, uploadMode);
+		return parameterResponseAssembler.assembleUploadValuesResponse();
+	}
 }
