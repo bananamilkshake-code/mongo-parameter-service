@@ -39,7 +39,7 @@ public class ParameterControllerImpl implements ParameterController {
 	}
 
 	@Override
-	@PostMapping(path = "/upload/{user}", consumes = {MediaType.APPLICATION_JSON_VALUE})
+	@PostMapping(path = "/{user}", consumes = {MediaType.APPLICATION_JSON_VALUE})
 	public ResponseEntity uploadValues(@PathVariable String type,
 									   @PathVariable String user,
 									   @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) ZonedDateTime validFrom,
