@@ -33,7 +33,7 @@ services:
     ports:
       - "27018:27017"
     volumes:
-      - ~/.docker-mongo-data:/data
+      - parameter:/data/db
     deploy:
       placement:
         constraints: [node.role == manager]
@@ -41,3 +41,5 @@ services:
       - webnet
 networks:
   webnet:
+volumes:
+  parameter:
