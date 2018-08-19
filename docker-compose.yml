@@ -14,7 +14,16 @@ services:
       - mongo
     ports:
       - "8090:8090"
-    command: "java -Dspring.data.mongodb.uri=mongodb://mongo/parameter -jar parameter-service.jar"
+      - "1898:1898"
+    command: "java \
+              -Dspring.data.mongodb.uri=mongodb://mongo/parameter
+              -Dcom.sun.management.jmxremote
+              -Dcom.sun.management.jmxremote.authenticate=false
+              -Dcom.sun.management.jmxremote.ssl=false
+              -Dcom.sun.management.jmxremote.rmi.port=1898
+              -Dcom.sun.management.jmxremote.port=1898
+              -Djava.rmi.server.hostname=localhost
+              -jar parameter-service.jar"
     networks:
       - webnet
   visualizer:
@@ -25,7 +34,7 @@ services:
       - "/var/run/docker.sock:/var/run/docker.sock"
     deploy:
       placement:
-        constraints: [node.role == manager]
+        constraints: [node.role   == manager]
     networks:
       - webnet
   mongo:
