@@ -38,7 +38,7 @@ services:
     networks:
       - webnet
   mongo:
-    image: mongo
+    image: mongo:3.2
     ports:
       - "27018:27017"
     volumes:
