@@ -1,0 +1,13 @@
+{
+  "validation": {
+    "name": {
+      "$exists": "true",
+      "$type": "string"
+    },
+    "value": {
+      "$exists": "true",
+      "$type": "number",
+      "$gt": 0
+    }
+  }
+}
