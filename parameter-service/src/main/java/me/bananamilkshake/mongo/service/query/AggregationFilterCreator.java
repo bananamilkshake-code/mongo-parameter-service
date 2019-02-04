@@ -3,11 +3,11 @@ package me.bananamilkshake.mongo.service.query;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mongodb.BasicDBObject;
-import com.mongodb.DBObject;
 import lombok.AllArgsConstructor;
 import me.bananamilkshake.mongo.domain.aggregation.ParameterAggregationFilter;
 import me.bananamilkshake.mongo.domain.aggregation.match.MatchDescription;
 import me.bananamilkshake.mongo.domain.aggregation.sort.SortDescription;
+import org.bson.conversions.Bson;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
@@ -20,7 +20,7 @@ public class AggregationFilterCreator {
 
 	private final ObjectMapper objectMapper;
 
-	public List<DBObject> create(String user, LocalDateTime date) {
+	public List<Bson> create(String user, LocalDateTime date) {
 		return buildAggregationFilter(user, date)
 				.stream()
 				.map(this::convertFilterPart)
@@ -34,7 +34,7 @@ public class AggregationFilterCreator {
 				.setLimit(1);
 	}
 
-	private DBObject convertFilterPart(Object object) {
+	private BasicDBObject convertFilterPart(Object object) {
 		try {
 			return BasicDBObject.parse(objectMapper.writeValueAsString(object));
 		} catch (JsonProcessingException jsonProcessingException) {

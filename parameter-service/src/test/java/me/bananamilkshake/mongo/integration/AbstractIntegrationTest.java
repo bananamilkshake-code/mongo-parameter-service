@@ -17,7 +17,7 @@ import org.testcontainers.containers.GenericContainer;
 public abstract class AbstractIntegrationTest {
 
     @Rule
-    public GenericContainer mongo = new GenericContainer("mongo:3.2").withExposedPorts(27017);
+    public GenericContainer mongo = new GenericContainer("mongo:3.6").withExposedPorts(27017);
 
     @Autowired
     protected MongoTemplate mongoTemplate;
@@ -25,9 +25,8 @@ public abstract class AbstractIntegrationTest {
     @Autowired
     protected MockMvc mockMvc;
 
-
     @After
-    public void tearDown() throws Exception {
+    public void tearDown() {
         mongoTemplate.getCollectionNames().forEach(collectionName -> mongoTemplate.dropCollection(collectionName));
     }
 }

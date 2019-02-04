@@ -2,15 +2,18 @@ package me.bananamilkshake.mongo.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.junit.MockitoJUnit;
+import org.mockito.junit.MockitoRule;
 
 import static java.lang.String.format;
 import static org.assertj.core.api.Assertions.assertThat;
 
-@RunWith(MockitoJUnitRunner.class)
 public class ParameterCreationDescriptionParserTest {
+
+	@Rule
+	public MockitoRule mockitoRule = MockitoJUnit.rule();
 
 	private ParameterCreationDescriptionParser parameterCreationDescriptionParser;
 

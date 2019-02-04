@@ -3,19 +3,22 @@ package me.bananamilkshake.mongo.assembler;
 import me.bananamilkshake.mongo.domain.Parameter;
 import me.bananamilkshake.mongo.dto.ParameterDto;
 import me.bananamilkshake.mongo.service.convert.ParameterConverter;
+import org.junit.Rule;
 import org.junit.Test;
-import org.junit.runner.RunWith;
 import org.mockito.Mock;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.junit.MockitoJUnit;
+import org.mockito.junit.MockitoRule;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Matchers.eq;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.when;
 
-@RunWith(MockitoJUnitRunner.class)
 public class ParameterResponseAssemblerTest {
+
+	@Rule
+	public MockitoRule mockitoRule = MockitoJUnit.rule();
 
 	@Mock
 	private ParameterConverter parameterConverter;

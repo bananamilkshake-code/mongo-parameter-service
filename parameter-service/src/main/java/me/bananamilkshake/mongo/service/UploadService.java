@@ -1,6 +1,7 @@
 package me.bananamilkshake.mongo.service;
 
 import com.mongodb.WriteResult;
+import com.mongodb.client.result.DeleteResult;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import me.bananamilkshake.mongo.domain.Fields;
@@ -62,7 +63,7 @@ public class UploadService {
 	}
 
 	private void replace(final String type, Parameter parameter) {
-		WriteResult writeResult = mongoTemplate.remove(prepareQuery(parameter), type);
+		DeleteResult writeResult = mongoTemplate.remove(prepareQuery(parameter), type);
 		log.info("Removed records from `{}` collection, result {}", type, writeResult);
 		insert(type, parameter);
 	}

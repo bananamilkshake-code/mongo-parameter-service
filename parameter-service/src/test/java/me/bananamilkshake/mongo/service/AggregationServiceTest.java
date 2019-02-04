@@ -1,34 +1,41 @@
 package me.bananamilkshake.mongo.service;
 
-import com.mongodb.*;
+import com.mongodb.ServerAddress;
+import com.mongodb.ServerCursor;
+import com.mongodb.client.AggregateIterable;
+import com.mongodb.client.MongoCollection;
+import com.mongodb.client.MongoCursor;
 import me.bananamilkshake.mongo.domain.Parameter;
 import me.bananamilkshake.mongo.exception.NoParameterWithSuchArgumentsExistsException;
 import me.bananamilkshake.mongo.exception.NoSuchParameterExistsException;
 import me.bananamilkshake.mongo.service.query.AggregationFilterCreator;
+import org.bson.Document;
+import org.junit.Rule;
 import org.junit.Test;
-import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.invocation.InvocationOnMock;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.junit.MockitoJUnit;
+import org.mockito.junit.MockitoRule;
 import org.springframework.data.mongodb.core.CollectionCallback;
 import org.springframework.data.mongodb.core.MongoTemplate;
-import org.springframework.data.mongodb.core.convert.MongoConverter;
 
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
+import java.util.Iterator;
 import java.util.List;
 
 import static com.google.common.collect.Lists.newArrayList;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.catchThrowable;
-import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.eq;
-import static org.mockito.Mockito.mock;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.when;
 
-@RunWith(MockitoJUnitRunner.class)
 public class AggregationServiceTest {
+
+	@Rule
+	public MockitoRule mockitoRule = MockitoJUnit.rule();
 
 	@Mock
 	private AggregationFilterCreator aggregationFilterCreator;
@@ -125,20 +132,16 @@ public class AggregationServiceTest {
 	private Parameter executeAndReturn(InvocationOnMock invocation,
 									   String user,
 									   ZonedDateTime date,
-									   AggregationOutput aggregationOutput) {
-		return callback(invocation).doInCollection(collection(user, converted(date), aggregationOutput));
+									   AggregateIterable<Parameter> aggregateIterable) {
+		return callback(invocation).doInCollection(collection(user, converted(date), aggregateIterable));
 	}
 
-	private AggregationOutput emptyOutput() {
+	private AggregateIterable<Parameter> emptyOutput() {
 		return mockAggregationOutputWith(newArrayList());
 	}
 
-	private AggregationOutput output(Parameter... parameters) {
-		MongoConverter mongoConverter = mock(MongoConverter.class);
-
-		List<DBObject> dbObjects = mockMongoConverterFor(mongoConverter, parameters);
-
-		return mockAggregationOutputWith(dbObjects);
+	private AggregateIterable<Parameter> output(Parameter... parameters) {
+		return mockAggregationOutputWith(newArrayList(parameters));
 	}
 
 	private LocalDateTime converted(ZonedDateTime zonedDateTime) {
@@ -148,32 +151,56 @@ public class AggregationServiceTest {
 	}
 
 	private CollectionCallback<Parameter> callback(InvocationOnMock invocation) {
-		return ((CollectionCallback<Parameter>) invocation.getArguments()[1]);
+		return invocation.getArgument(1);
 	}
 
-	private DBCollection collection(String user, LocalDateTime date, AggregationOutput aggregationOutput) {
+	@Mock
+	public MongoCollection<Document> collection;
+
+	private MongoCollection<Document> collection(String user, LocalDateTime date, AggregateIterable<Parameter> aggregateIterable) {
 		when(aggregationFilterCreator.create(eq(user), eq(date))).thenReturn(newArrayList());
 
-		DBCollection collection = mock(DBCollection.class);
-		when(collection.aggregate(any())).thenReturn(aggregationOutput);
+		when(collection.aggregate(any(), eq(Parameter.class))).thenReturn(aggregateIterable);
 		return collection;
 	}
 
-	private AggregationOutput mockAggregationOutputWith(List<DBObject> parameters) {
-		AggregationOutput aggregationOutput = mock(AggregationOutput.class);
-		when(aggregationOutput.results()).thenReturn(parameters);
+	@Mock
+	public AggregateIterable<Parameter> aggregationOutput;
+
+	private AggregateIterable<Parameter> mockAggregationOutputWith(List<Parameter> parameters) {
+		MongoCursor<Parameter> mongoCursor = new MongoCursor<Parameter>() {
+
+			private Iterator<Parameter> parametersIterator = parameters.iterator();
+
+			@Override
+			public void close() {}
+
+			@Override
+			public boolean hasNext() {
+				return parametersIterator.hasNext();
+			}
+
+			@Override
+			public Parameter next() {
+				return parametersIterator.next();
+			}
+
+			@Override
+			public Parameter tryNext() {
+				return null;
+			}
+
+			@Override
+			public ServerCursor getServerCursor() {
+				return null;
+			}
+
+			@Override
+			public ServerAddress getServerAddress() {
+				return null;
+			}
+		};
+		when(aggregationOutput.iterator()).thenReturn(mongoCursor);
 		return aggregationOutput;
-	}
-
-	private List<DBObject> mockMongoConverterFor(MongoConverter mongoConverter, Parameter... parameters) {
-		when(mongoTemplate.getConverter()).thenReturn(mongoConverter);
-
-		List<DBObject> dbObjects = newArrayList();
-		for (Parameter parameter : parameters) {
-			DBObject parameterDbObject = new BasicDBObject();
-			when(mongoConverter.read(any(), eq(parameterDbObject))).thenReturn(parameter);
-			dbObjects.add(parameterDbObject);
-		}
-		return dbObjects;
 	}
 }

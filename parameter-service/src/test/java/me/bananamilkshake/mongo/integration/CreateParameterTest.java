@@ -1,6 +1,7 @@
 package me.bananamilkshake.mongo.integration;
 
 import com.mongodb.DBCollection;
+import com.mongodb.client.MongoCollection;
 import org.junit.Test;
 import org.springframework.http.MediaType;
 
@@ -67,8 +68,8 @@ public class CreateParameterTest extends AbstractIntegrationTest {
     }
 
     private void givenParameterExists(String name) {
-        DBCollection collection = mongoTemplate.createCollection(name);
-        assertThat(collection).isNotNull().as("Collection not created");
+        MongoCollection collection = mongoTemplate.createCollection(name);
+        assertThat(collection).as("Collection not created").isNotNull();
     }
 
     private void givenParameterNotExists(String type) {

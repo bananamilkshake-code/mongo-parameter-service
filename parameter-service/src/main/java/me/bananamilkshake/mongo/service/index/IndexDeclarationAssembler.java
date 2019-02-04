@@ -2,13 +2,11 @@ package me.bananamilkshake.mongo.service.index;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.mongodb.BasicDBObject;
-import com.mongodb.DBObject;
-import com.mongodb.util.JSON;
 import lombok.RequiredArgsConstructor;
 import me.bananamilkshake.mongo.domain.index.IndexDescription;
 import me.bananamilkshake.mongo.service.values.ValuesPreparationService;
-import org.bson.BSONObject;
+import org.bson.BsonDocument;
+import org.bson.conversions.Bson;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -20,7 +18,7 @@ class IndexDeclarationAssembler {
 
 	private final ValuesPreparationService valuesPreparationService;
 
-	private BSONObject standardIndex;
+	private BsonDocument standardIndex;
 
 	@Autowired
 	public void setObjectMapper(ObjectMapper objectMapper) {
@@ -31,11 +29,11 @@ class IndexDeclarationAssembler {
 			throw new RuntimeException("Failed to create JSON description from IndexDescription object", jsonProcessingException);
 		}
 
-		standardIndex = (BSONObject) JSON.parse(standardIndexDescription);
+		standardIndex = BsonDocument.parse(standardIndexDescription);
 	}
 
-	DBObject assemble(String valuesIndexDescription) {
-		BasicDBObject index = new BasicDBObject();
+	Bson assemble(String valuesIndexDescription) {
+		BsonDocument index = new BsonDocument();
 		index.putAll(standardIndex);
 		if (!isEmpty(valuesIndexDescription)) {
 			index.putAll(valuesPreparationService.prepare(valuesIndexDescription));

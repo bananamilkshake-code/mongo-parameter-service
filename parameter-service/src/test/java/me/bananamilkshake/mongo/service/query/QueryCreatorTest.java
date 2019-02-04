@@ -2,6 +2,7 @@ package me.bananamilkshake.mongo.service.query;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mongodb.DBObject;
+import org.bson.conversions.Bson;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -27,7 +28,7 @@ public class QueryCreatorTest {
 		final LocalDateTime date = LocalDateTime.of(2017, 10, 7, 0, 0);
 
 		// when
-		final List<DBObject> result = aggregationFilterCreator.create(user, date);
+		final List<Bson> result = aggregationFilterCreator.create(user, date);
 
 		// then
 		assertThat(result).hasSize(3);

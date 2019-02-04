@@ -2,20 +2,23 @@ package me.bananamilkshake.mongo.service.validation;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.mongodb.util.JSON;
+import com.mongodb.BasicDBObject;
 import me.bananamilkshake.mongo.service.values.ValuesPreparationService;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
-import org.junit.runner.RunWith;
 import org.mockito.Mock;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.junit.MockitoJUnit;
+import org.mockito.junit.MockitoRule;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Matchers.any;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
-@RunWith(MockitoJUnitRunner.class)
 public class ValidatorCommandAssemblerTest {
+
+	@Rule
+	public MockitoRule mockitoRule = MockitoJUnit.rule();
 
 	@Mock
 	private ObjectMapper objectMapper;
@@ -39,7 +42,7 @@ public class ValidatorCommandAssemblerTest {
 	public void setup() throws JsonProcessingException {
 		when(objectMapper.writeValueAsString(any())).thenReturn(STANDARD_VALIDATION);
 
-		when(valuesPreparationService.prepare(any())).thenAnswer(invocation -> JSON.parse(invocation.getArgumentAt(0, String.class)));
+		when(valuesPreparationService.prepare(any())).thenAnswer(invocation -> BasicDBObject.parse(invocation.getArgument(0)));
 	}
 
 	@Test

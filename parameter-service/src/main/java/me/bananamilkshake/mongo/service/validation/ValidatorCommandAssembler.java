@@ -2,10 +2,13 @@ package me.bananamilkshake.mongo.service.validation;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.mongodb.BasicDBObject;
 import lombok.RequiredArgsConstructor;
 import me.bananamilkshake.mongo.domain.validation.ParameterValidator;
 import me.bananamilkshake.mongo.service.values.ValuesPreparationService;
 import org.bson.BasicBSONObject;
+import org.bson.BsonDocument;
+import org.bson.conversions.Bson;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -39,8 +42,8 @@ class ValidatorCommandAssembler {
 	}
 
 	private String prepareValidationDescription(String validationDescription) {
-		BasicBSONObject bsonObject = new BasicBSONObject();
+		BasicDBObject bsonObject = new BasicDBObject();
 		bsonObject.putAll(valuesPreparationService.prepare(validationDescription));
-		return bsonObject.toString();
+		return bsonObject.toJson();
 	}
 }

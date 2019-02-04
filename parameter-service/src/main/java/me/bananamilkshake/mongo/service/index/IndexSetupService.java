@@ -11,6 +11,6 @@ public class IndexSetupService {
 	private final IndexDeclarationAssembler indexDeclarationAssembler;
 
 	public void setupIndex(final MongoTemplate mongoTemplate, final String type, final String index) {
-		mongoTemplate.getCollection(type).createIndex(indexDeclarationAssembler.assemble(index), null, true);
+		mongoTemplate.getCollection(type).createIndex(indexDeclarationAssembler.assemble(index));
 	}
 }
